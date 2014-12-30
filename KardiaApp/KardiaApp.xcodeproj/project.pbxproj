@@ -1,0 +1,441 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7651E8031A52132E002DD7FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E8021A52132E002DD7FC /* AppDelegate.swift */; };
+		7651E8051A52132E002DD7FC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E8041A52132E002DD7FC /* ViewController.swift */; };
+		7651E8081A52132E002DD7FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7651E8061A52132E002DD7FC /* Main.storyboard */; };
+		7651E80A1A52132E002DD7FC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7651E8091A52132E002DD7FC /* Images.xcassets */; };
+		7651E80D1A52132E002DD7FC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7651E80B1A52132E002DD7FC /* LaunchScreen.xib */; };
+		7651E8191A52132F002DD7FC /* KardiaAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E8181A52132F002DD7FC /* KardiaAppTests.swift */; };
+		7651E82C1A5251C9002DD7FC /* BLEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E82A1A5251C9002DD7FC /* BLEService.swift */; };
+		7651E82D1A5251C9002DD7FC /* BLEDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E82B1A5251C9002DD7FC /* BLEDiscovery.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7651E8131A52132F002DD7FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7651E7F51A52132E002DD7FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7651E7FC1A52132E002DD7FC;
+			remoteInfo = KardiaApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7651E7FD1A52132E002DD7FC /* KardiaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KardiaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7651E8011A52132E002DD7FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7651E8021A52132E002DD7FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7651E8041A52132E002DD7FC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7651E8071A52132E002DD7FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7651E8091A52132E002DD7FC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7651E80C1A52132E002DD7FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		7651E8121A52132F002DD7FC /* KardiaAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KardiaAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7651E8171A52132F002DD7FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7651E8181A52132F002DD7FC /* KardiaAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KardiaAppTests.swift; sourceTree = "<group>"; };
+		7651E82A1A5251C9002DD7FC /* BLEService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEService.swift; sourceTree = "<group>"; };
+		7651E82B1A5251C9002DD7FC /* BLEDiscovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDiscovery.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7651E7FA1A52132E002DD7FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7651E80F1A52132F002DD7FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7651E7F41A52132E002DD7FC = {
+			isa = PBXGroup;
+			children = (
+				7651E7FF1A52132E002DD7FC /* KardiaApp */,
+				7651E8151A52132F002DD7FC /* KardiaAppTests */,
+				7651E7FE1A52132E002DD7FC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7651E7FE1A52132E002DD7FC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7651E7FD1A52132E002DD7FC /* KardiaApp.app */,
+				7651E8121A52132F002DD7FC /* KardiaAppTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7651E7FF1A52132E002DD7FC /* KardiaApp */ = {
+			isa = PBXGroup;
+			children = (
+				7651E8251A5250DB002DD7FC /* BLE */,
+				7651E8021A52132E002DD7FC /* AppDelegate.swift */,
+				7651E8041A52132E002DD7FC /* ViewController.swift */,
+				7651E8061A52132E002DD7FC /* Main.storyboard */,
+				7651E8091A52132E002DD7FC /* Images.xcassets */,
+				7651E80B1A52132E002DD7FC /* LaunchScreen.xib */,
+				7651E8001A52132E002DD7FC /* Supporting Files */,
+			);
+			path = KardiaApp;
+			sourceTree = "<group>";
+		};
+		7651E8001A52132E002DD7FC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7651E8011A52132E002DD7FC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7651E8151A52132F002DD7FC /* KardiaAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				7651E8181A52132F002DD7FC /* KardiaAppTests.swift */,
+				7651E8161A52132F002DD7FC /* Supporting Files */,
+			);
+			path = KardiaAppTests;
+			sourceTree = "<group>";
+		};
+		7651E8161A52132F002DD7FC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7651E8171A52132F002DD7FC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7651E8251A5250DB002DD7FC /* BLE */ = {
+			isa = PBXGroup;
+			children = (
+				7651E82A1A5251C9002DD7FC /* BLEService.swift */,
+				7651E82B1A5251C9002DD7FC /* BLEDiscovery.swift */,
+			);
+			name = BLE;
+			path = ..;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7651E7FC1A52132E002DD7FC /* KardiaApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7651E81C1A52132F002DD7FC /* Build configuration list for PBXNativeTarget "KardiaApp" */;
+			buildPhases = (
+				7651E7F91A52132E002DD7FC /* Sources */,
+				7651E7FA1A52132E002DD7FC /* Frameworks */,
+				7651E7FB1A52132E002DD7FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KardiaApp;
+			productName = KardiaApp;
+			productReference = 7651E7FD1A52132E002DD7FC /* KardiaApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7651E8111A52132F002DD7FC /* KardiaAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7651E81F1A52132F002DD7FC /* Build configuration list for PBXNativeTarget "KardiaAppTests" */;
+			buildPhases = (
+				7651E80E1A52132F002DD7FC /* Sources */,
+				7651E80F1A52132F002DD7FC /* Frameworks */,
+				7651E8101A52132F002DD7FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7651E8141A52132F002DD7FC /* PBXTargetDependency */,
+			);
+			name = KardiaAppTests;
+			productName = KardiaAppTests;
+			productReference = 7651E8121A52132F002DD7FC /* KardiaAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7651E7F51A52132E002DD7FC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Kardia;
+				TargetAttributes = {
+					7651E7FC1A52132E002DD7FC = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					7651E8111A52132F002DD7FC = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 7651E7FC1A52132E002DD7FC;
+					};
+				};
+			};
+			buildConfigurationList = 7651E7F81A52132E002DD7FC /* Build configuration list for PBXProject "KardiaApp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7651E7F41A52132E002DD7FC;
+			productRefGroup = 7651E7FE1A52132E002DD7FC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7651E7FC1A52132E002DD7FC /* KardiaApp */,
+				7651E8111A52132F002DD7FC /* KardiaAppTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7651E7FB1A52132E002DD7FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7651E8081A52132E002DD7FC /* Main.storyboard in Resources */,
+				7651E80D1A52132E002DD7FC /* LaunchScreen.xib in Resources */,
+				7651E80A1A52132E002DD7FC /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7651E8101A52132F002DD7FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7651E7F91A52132E002DD7FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7651E82D1A5251C9002DD7FC /* BLEDiscovery.swift in Sources */,
+				7651E8051A52132E002DD7FC /* ViewController.swift in Sources */,
+				7651E8031A52132E002DD7FC /* AppDelegate.swift in Sources */,
+				7651E82C1A5251C9002DD7FC /* BLEService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7651E80E1A52132F002DD7FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7651E8191A52132F002DD7FC /* KardiaAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7651E8141A52132F002DD7FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7651E7FC1A52132E002DD7FC /* KardiaApp */;
+			targetProxy = 7651E8131A52132F002DD7FC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		7651E8061A52132E002DD7FC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7651E8071A52132E002DD7FC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7651E80B1A52132E002DD7FC /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7651E80C1A52132E002DD7FC /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7651E81A1A52132F002DD7FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7651E81B1A52132F002DD7FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7651E81D1A52132F002DD7FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = KardiaApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7651E81E1A52132F002DD7FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = KardiaApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		7651E8201A52132F002DD7FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = KardiaAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KardiaApp.app/KardiaApp";
+			};
+			name = Debug;
+		};
+		7651E8211A52132F002DD7FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = KardiaAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KardiaApp.app/KardiaApp";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7651E7F81A52132E002DD7FC /* Build configuration list for PBXProject "KardiaApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7651E81A1A52132F002DD7FC /* Debug */,
+				7651E81B1A52132F002DD7FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7651E81C1A52132F002DD7FC /* Build configuration list for PBXNativeTarget "KardiaApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7651E81D1A52132F002DD7FC /* Debug */,
+				7651E81E1A52132F002DD7FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7651E81F1A52132F002DD7FC /* Build configuration list for PBXNativeTarget "KardiaAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7651E8201A52132F002DD7FC /* Debug */,
+				7651E8211A52132F002DD7FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7651E7F51A52132E002DD7FC /* Project object */;
+}
