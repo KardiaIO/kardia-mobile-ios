@@ -14,11 +14,13 @@ let BLEServiceUUID = CBUUID(string: "713D0000-503E-4C75-BA94-3148F18D941E")
 let EKGCharUUID = CBUUID(string: "713D0002-503E-4C75-BA94-3148F18D941E")
 let RXUUID = CBUUID(string: "713D0003-503E-4C75-BA94-3148F18D941E")
 let BLEServiceChangedStatusNotification = "kBLEServiceChangedStatusNotification"
+let GotBLEDataNotification = "GotBLEData"
 
 class BTService: NSObject, CBPeripheralDelegate {
     var peripheral: CBPeripheral?
     var positionCharacteristic: CBCharacteristic?
     var RXCharacteristic: CBCharacteristic?
+    var dataPoints: [String] = []
     
     init(initWithPeripheral peripheral: CBPeripheral) {
         super.init()
@@ -102,7 +104,14 @@ class BTService: NSObject, CBPeripheralDelegate {
         }
         var foo: NSData = self.positionCharacteristic!.value
         var bar: String = NSString(data: foo, encoding: NSUTF8StringEncoding)!
-        println(bar)
+//        println(bar)
+        dataPoints.append(bar)
+        if dataPoints.count > 5 {
+            dataPoints.removeAtIndex(0)
+        }
+//        println(dataPoints)
+        let passData = ["passData": dataPoints]
+        NSNotificationCenter.defaultCenter().postNotificationName(GotBLEDataNotification, object: self, userInfo: passData)
     }
     
     
