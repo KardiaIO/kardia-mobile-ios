@@ -29,7 +29,7 @@ class ViewController: UIViewController, LineChartDelegate {
         // Start the Bluetooth discovery process
         btDiscoverySharedInstance
         
-        
+        println(view)
         label.text = "Incoming Data"
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         label.textAlignment = NSTextAlignment.Center
@@ -48,7 +48,7 @@ class ViewController: UIViewController, LineChartDelegate {
 //        lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
         lineChart!.delegate = self
         self.view.addSubview(lineChart!)
-        views["chart"] = lineChart
+//        views["chart"] = lineChart
 //        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
 //        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
         
@@ -63,9 +63,10 @@ class ViewController: UIViewController, LineChartDelegate {
 //        });
         
         
-        // Watch for incoming data from Bluetooth
+        // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("drawGraph:"), name: GotBLEDataNotification, object: nil)
     }
+
     
     override func shouldAutorotate() -> Bool {
         return false
@@ -87,16 +88,24 @@ class ViewController: UIViewController, LineChartDelegate {
         });
     }
     
+
+
+    // Callback function called when ViewController learns of incoming data
+
     func drawGraph(notification: NSNotification) {
-        // Got data, time to redraw the graph.
+        // Data passed along needs to be type converted to an array of CGFloats in order to be used by lineChart
         let data = notification.userInfo!["passData"]! as [String]
         let cgFloatData = data.map {
             CGFloat(($0 as NSString).doubleValue)
         }
         println(cgFloatData)
+        
+        // Draw new graph
+        lineChart!.clear()
         lineChart!.addLine(cgFloatData)
         lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
-        
+        println(view)
+        views["chart"] = lineChart
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
 
