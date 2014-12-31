@@ -98,18 +98,21 @@ class BTService: NSObject, CBPeripheralDelegate {
         }
     }
     
+    // This function executes when the BLE device updates the value it is transmitting.
     func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
         if self.positionCharacteristic == nil {
             return
         }
-        var foo: NSData = self.positionCharacteristic!.value
-        var bar: String = NSString(data: foo, encoding: NSUTF8StringEncoding)!
-//        println(bar)
-        dataPoints.append(bar)
-        if dataPoints.count > 5 {
+        // Get the raw data from the device and type cast it to string.
+        var charRawValue: NSData = self.positionCharacteristic!.value
+        var charValue: String = NSString(data: charRawValue, encoding: NSUTF8StringEncoding)!
+        
+        // Store the latest datapoints in an array to be passed on for visualization
+        dataPoints.append(charValue)
+        if dataPoints.count > 15 {
             dataPoints.removeAtIndex(0)
         }
-//        println(dataPoints)
+        // Pass the datapoints on via a notification.
         let passData = ["passData": dataPoints]
         NSNotificationCenter.defaultCenter().postNotificationName(GotBLEDataNotification, object: self, userInfo: passData)
     }
