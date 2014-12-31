@@ -16,10 +16,10 @@ class ViewController: UIViewController, LineChartDelegate {
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
 
-    
     @IBOutlet weak var BLEDisconnected: UIImageView!
     
     @IBOutlet weak var BLEConnected: UIImageView!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +29,9 @@ class ViewController: UIViewController, LineChartDelegate {
         // Start the Bluetooth discovery process
         btDiscoverySharedInstance
         
+
         println(view)
+
         label.text = "Incoming Data"
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         label.textAlignment = NSTextAlignment.Center
@@ -62,7 +64,6 @@ class ViewController: UIViewController, LineChartDelegate {
 //            }
 //        });
         
-        
         // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("drawGraph:"), name: GotBLEDataNotification, object: nil)
     }
@@ -94,6 +95,7 @@ class ViewController: UIViewController, LineChartDelegate {
 
     func drawGraph(notification: NSNotification) {
         // Data passed along needs to be type converted to an array of CGFloats in order to be used by lineChart
+
         let data = notification.userInfo!["passData"]! as [String]
         let cgFloatData = data.map {
             CGFloat(($0 as NSString).doubleValue)
@@ -109,24 +111,11 @@ class ViewController: UIViewController, LineChartDelegate {
         views["chart"] = lineChart
         println("after")
         println(views["chart"])
+        lineChart!.addLine(cgFloatData)
+        lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
 
-//        let userInfo = notification.userInfo as [NSArray: String]
-        
-//        dispatch_async(dispatch_get_main_queue(), {
-//            // Set image based on connection status
-//            if let isConnected: Bool = userInfo["isConnected"] {
-//                if isConnected {
-//                    self.imgBluetoothStatus.image = UIImage(named: "Bluetooth_Connected")
-//                    
-//                    // Send current slider position
-//                    self.sendPosition(UInt8( self.positionSlider.value))
-//                } else {
-//                    self.imgBluetoothStatus.image = UIImage(named: "Bluetooth_Disconnected")
-//                }
-//            }
-//        });
     }
 
     
