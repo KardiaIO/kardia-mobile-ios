@@ -16,23 +16,26 @@ class ViewController: UIViewController, LineChartDelegate {
     
     @IBOutlet weak var BLEConnected: UIImageView!
 
-    func makeChart(data: [CGFloat]){
-        lineChart = LineChart()
-        lineChart!.clearAll()
-        lineChart!.animationEnabled = false
-        lineChart!.gridVisible = false
-        lineChart!.dotsVisible = false
-        lineChart!.addLine(data)
-        lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
-        lineChart!.delegate = self
-        self.view.addSubview(lineChart!)
-        views["chart"] = lineChart
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
-        view.setNeedsDisplay()
+    func makeChart(data: [CGFloat]) {
+        // if the chart is already defined, just clear it and add a line.
+        if let chart: LineChart = lineChart {
+            chart.clear();
+            chart.addLine(data)
+        // otherwise initialize the chart and add a line.
+        } else {
+            lineChart = LineChart()
+            lineChart!.animationEnabled = false
+            lineChart!.gridVisible = false
+            lineChart!.dotsVisible = false
+            lineChart!.addLine(data)
+            lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
+            lineChart!.delegate = self
+            self.view.addSubview(lineChart!)
+            views["chart"] = lineChart
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
+        }
     }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
