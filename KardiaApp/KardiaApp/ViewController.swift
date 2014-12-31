@@ -44,13 +44,13 @@ class ViewController: UIViewController, LineChartDelegate {
         lineChart!.animationEnabled = false
         lineChart!.gridVisible = false
         lineChart!.dotsVisible = false
-//        lineChart!.addLine(data)
-//        lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
+        lineChart!.addLine(data)
+        lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
         lineChart!.delegate = self
         self.view.addSubview(lineChart!)
-//        views["chart"] = lineChart
-//        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-//        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
+        views["chart"] = lineChart
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
         
 //        var delta: Int64 = 4 * Int64(NSEC_PER_SEC)
 //        var time = dispatch_time(DISPATCH_TIME_NOW, delta)
@@ -104,8 +104,11 @@ class ViewController: UIViewController, LineChartDelegate {
         lineChart!.clear()
         lineChart!.addLine(cgFloatData)
         lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
-        println(view)
+        println("before")
+        println(views["chart"])
         views["chart"] = lineChart
+        println("after")
+        println(views["chart"])
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
 

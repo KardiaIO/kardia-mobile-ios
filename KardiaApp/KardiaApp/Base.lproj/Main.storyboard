@@ -13,11 +13,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Connected" id="4DM-CG-iWF">
-                                <rect key="frame" x="77" y="392" width="190" height="71"/>
+                                <rect key="frame" x="65" y="392" width="190" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Disconnected" id="lBW-GW-b2g">
-                                <rect key="frame" x="77" y="392" width="190" height="71"/>
+                                <rect key="frame" x="65" y="392" width="190" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
