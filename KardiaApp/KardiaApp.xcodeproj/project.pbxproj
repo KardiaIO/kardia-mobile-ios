@@ -15,6 +15,8 @@
 		7651E8191A52132F002DD7FC /* KardiaAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E8181A52132F002DD7FC /* KardiaAppTests.swift */; };
 		7651E82C1A5251C9002DD7FC /* BLEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E82A1A5251C9002DD7FC /* BLEService.swift */; };
 		7651E82D1A5251C9002DD7FC /* BLEDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E82B1A5251C9002DD7FC /* BLEDiscovery.swift */; };
+		CB53176A1A5260A3001EC481 /* LineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5317691A5260A3001EC481 /* LineChart.swift */; };
+		CB53176C1A5260EF001EC481 /* DotCALayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB53176B1A5260EF001EC481 /* DotCALayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,8 @@
 		7651E8181A52132F002DD7FC /* KardiaAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KardiaAppTests.swift; sourceTree = "<group>"; };
 		7651E82A1A5251C9002DD7FC /* BLEService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEService.swift; sourceTree = "<group>"; };
 		7651E82B1A5251C9002DD7FC /* BLEDiscovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDiscovery.swift; sourceTree = "<group>"; };
+		CB5317691A5260A3001EC481 /* LineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChart.swift; sourceTree = "<group>"; };
+		CB53176B1A5260EF001EC481 /* DotCALayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DotCALayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,7 @@
 		7651E7F41A52132E002DD7FC = {
 			isa = PBXGroup;
 			children = (
+				CB53176B1A5260EF001EC481 /* DotCALayer.swift */,
 				7651E7FF1A52132E002DD7FC /* KardiaApp */,
 				7651E8151A52132F002DD7FC /* KardiaAppTests */,
 				7651E7FE1A52132E002DD7FC /* Products */,
@@ -84,6 +89,7 @@
 				7651E8251A5250DB002DD7FC /* BLE */,
 				7651E8021A52132E002DD7FC /* AppDelegate.swift */,
 				7651E8041A52132E002DD7FC /* ViewController.swift */,
+				CB5317691A5260A3001EC481 /* LineChart.swift */,
 				7651E8061A52132E002DD7FC /* Main.storyboard */,
 				7651E8091A52132E002DD7FC /* Images.xcassets */,
 				7651E80B1A52132E002DD7FC /* LaunchScreen.xib */,
@@ -228,9 +234,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				7651E82D1A5251C9002DD7FC /* BLEDiscovery.swift in Sources */,
+				CB53176C1A5260EF001EC481 /* DotCALayer.swift in Sources */,
 				7651E8051A52132E002DD7FC /* ViewController.swift in Sources */,
 				7651E8031A52132E002DD7FC /* AppDelegate.swift in Sources */,
 				7651E82C1A5251C9002DD7FC /* BLEService.swift in Sources */,
+				CB53176A1A5260A3001EC481 /* LineChart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

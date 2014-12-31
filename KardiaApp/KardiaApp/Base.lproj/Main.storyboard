@@ -7,21 +7,22 @@
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="KardiaApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" alpha="0.74999999999999978" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+
                         <subviews>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Connected" id="4DM-CG-iWF">
-                                <rect key="frame" x="77" y="392" width="190" height="71"/>
+                                <rect key="frame" x="65" y="392" width="190" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Disconnected" id="lBW-GW-b2g">
-                                <rect key="frame" x="77" y="392" width="190" height="71"/>
+                                <rect key="frame" x="65" y="392" width="190" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
+
                         <color key="backgroundColor" red="0.50478333164449873" green="0.7568155640261226" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
@@ -29,6 +30,7 @@
                         <outlet property="BLEDisconnected" destination="lBW-GW-b2g" id="hHh-GL-o9O"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="195.73333333333332" y="233.82666666666665"/>
         </scene>
