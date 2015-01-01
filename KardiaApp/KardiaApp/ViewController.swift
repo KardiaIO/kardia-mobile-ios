@@ -55,6 +55,9 @@ class ViewController: UIViewController, LineChartDelegate {
         
         // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
+        
+        // Listen for charValue and pass to Node Server
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
     }
     
     override func shouldAutorotate() -> Bool {
@@ -84,7 +87,7 @@ class ViewController: UIViewController, LineChartDelegate {
     func processData(notification: NSNotification) {
         // Data passed along needs to be type converted to an array of CGFloats in order to be used by lineChart
 
-        let data = notification.userInfo!["passData"]! as [String]
+        let data = notification.userInfo!["passData"]! as [String]        
         let cgFloatData = data.map {
             CGFloat(($0 as NSString).doubleValue)
         }
@@ -111,7 +114,6 @@ class ViewController: UIViewController, LineChartDelegate {
     }
     
     
-    
     /**
     * Redraw chart on device rotation.
     */
@@ -119,6 +121,47 @@ class ViewController: UIViewController, LineChartDelegate {
         if let chart = lineChart {
             chart.setNeedsDisplay()
         }
+    }
+    
+    /**
+    * Socket.IO Connection
+    */
+    
+    func socketCall(notification: NSNotification) {
+        class SocketIODelegate: SocketIOSocketDelegate {
+            
+            init(){}
+            
+            private func socketOnEvent(SocketIOSocket, event: String, data: AnyObject?) {
+                NSLog("Socket on Event \(event), data \(data)")
+            }
+            
+            private func socketOnPacket(socket: SocketIOSocket, packet: SocketIOPacket) {
+                NSLog("Socket on Packet \(packet)")
+            }
+            
+            private func socketOnOpen(socket: SocketIOSocket) {
+                NSLog("Socket on open")
+            }
+            
+            private func socketOnError(socket: SocketIOSocket, error: String, description: String?) {
+                NSLog("Socket on error: \(error)")
+            }
+        }
+        let data = notification.userInfo!["charData"]! as String
+        let uri = "http://yourIPAddress:8080/socket.io/"
+        var client = SocketIOClient(uri: uri, reconnect: true, timeout: 30)
+        
+        // Sets namespace to "swift"
+        var socket = client.socket("swift")
+        var delegate = SocketIODelegate()
+        socket.delegate = delegate
+        socket.open()
+        socket.event("message", data: [data]) { (packet: SocketIOPacket) -> Void in
+            //println("Callback recieved from server")
+            //println(packet.data)
+        }
+    
     }
 }
 

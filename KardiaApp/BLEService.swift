@@ -15,6 +15,7 @@ let EKGCharUUID = CBUUID(string: "713D0002-503E-4C75-BA94-3148F18D941E")
 let RXUUID = CBUUID(string: "713D0003-503E-4C75-BA94-3148F18D941E")
 let BLEServiceChangedStatusNotification = "kBLEServiceChangedStatusNotification"
 let GotBLEDataNotification = "GotBLEData"
+let charValueNotification = "CharacterValue"
 
 class BTService: NSObject, CBPeripheralDelegate {
     var peripheral: CBPeripheral?
@@ -114,7 +115,9 @@ class BTService: NSObject, CBPeripheralDelegate {
         }
         // Pass the datapoints on via a notification.
         let passData = ["passData": dataPoints]
+        let charData = ["charData": charValue]
         NSNotificationCenter.defaultCenter().postNotificationName(GotBLEDataNotification, object: self, userInfo: passData)
+        NSNotificationCenter.defaultCenter().postNotificationName(charValueNotification, object: self, userInfo: charData)
     }
     
     
