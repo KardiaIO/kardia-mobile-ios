@@ -157,8 +157,9 @@ class LineChart: UIControl {
         for (lineIndex, lineData) in enumerate(dataStore) {
             var scaledDataXAxis = scaleDataXAxis(lineData)
             var scaledDataYAxis = scaleDataYAxis(lineData)
-            drawLine(scaledDataXAxis, yAxis: scaledDataYAxis, lineIndex: lineIndex)
-            
+            if (lineData.count > 1) {
+                drawLine(scaledDataXAxis, yAxis: scaledDataYAxis, lineIndex: lineIndex)
+            }
             // draw dots
             if dotsVisible { drawDataDots(scaledDataXAxis, yAxis: scaledDataYAxis, lineIndex: lineIndex) }
             
@@ -329,8 +330,8 @@ class LineChart: UIControl {
         var context = UIGraphicsGetCurrentContext()
         CGContextSetStrokeColorWithColor(context, axesColor.CGColor)
         // draw x-axis
-        CGContextMoveToPoint(context, axisInset, height-axisInset)
-        CGContextAddLineToPoint(context, width-axisInset, height-axisInset)
+        CGContextMoveToPoint(context, axisInset, height/2-axisInset)
+        CGContextAddLineToPoint(context, width-axisInset, height/2-axisInset)
         CGContextStrokePath(context)
         // draw y-axis
         CGContextMoveToPoint(context, axisInset, height-axisInset)
@@ -344,9 +345,9 @@ class LineChart: UIControl {
     * Get maximum value in all arrays in data store.
     */
     func getMaximumValue() -> CGFloat {
-        var maximum = 1
+        var maximum: CGFloat = 1.0
         for data in dataStore {
-            var newMaximum = data.reduce(Int.min, { max(Int($0), Int($1)) })
+            var newMaximum = data.reduce(0, { max($0, $1) })
             if newMaximum > maximum {
                 maximum = newMaximum
             }
@@ -354,7 +355,20 @@ class LineChart: UIControl {
         return CGFloat(maximum)
     }
     
-    
+    /**
+    * Get minimum value in all arrays in data store.
+    */
+    func getMinimumValue() -> CGFloat {
+        var minimum: CGFloat = 100.0
+        for data in dataStore {
+            var newMinimum = data.reduce(10, { min($0, $1) })
+            if newMinimum < minimum {
+                minimum = newMinimum
+            }
+        }
+        println("minimum is \(minimum)")
+        return CGFloat(minimum)
+    }
     
     /**
     * Scale to fit drawing width.
@@ -372,15 +386,24 @@ class LineChart: UIControl {
     
     
     /**
-    * Scale data to fit drawing height.
+    * Scale data to fit drawing height. This is modified from the original function in the Swift-lineChart library.
     */
     func scaleDataYAxis(data: Array<CGFloat>) -> Array<CGFloat> {
-        var maximumYValue = getMaximumValue()
-        var factor = drawingHeight / maximumYValue
+        // Uncommenting the below lines will automatically scale the graph for every line drawn, which looks worse than the hard-coded version directly below.
+//        var maximumYValue = getMaximumValue()
+//        var minimumYValue = getMinimumValue()
+        var maximumYValue: CGFloat = 6.0
+        var minimumYValue: CGFloat = 4.0
+        var factor = drawingHeight / (maximumYValue - minimumYValue)
+        println("factor is \(factor), max is \(maximumYValue), min is \(minimumYValue)")
         var scaledDataYAxis = data.map({datum -> CGFloat in
-            var newYValue = datum * factor
+            println("datum \(datum)")
+            var newYValue = (datum * factor) - (minimumYValue * factor)
+            println(newYValue)
             return newYValue
         })
+        println("old data is \(data)")
+        println("new data is \(scaledDataYAxis)")
         return scaledDataYAxis
     }
     
