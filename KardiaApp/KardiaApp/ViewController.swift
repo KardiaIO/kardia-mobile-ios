@@ -11,6 +11,8 @@ class ViewController: UIViewController, LineChartDelegate {
     var label = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
+    let uri = "http://yourIPAddress:8080/socket.io/"
+    var socket: SocketIOSocket?
 
     @IBOutlet weak var BLEDisconnected: UIImageView!
     
@@ -55,6 +57,13 @@ class ViewController: UIViewController, LineChartDelegate {
         
         // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
+        
+        // Open socket connection
+        var client = SocketIOClient(uri: uri, reconnect: true, timeout: 30)
+        socket = client.socket("swift")
+        let delegate = SocketIODelegate()
+        socket!.delegate = delegate
+        socket!.open()
         
         // Listen for charValue and pass to Node Server
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
@@ -126,38 +135,33 @@ class ViewController: UIViewController, LineChartDelegate {
     /**
     * Socket.IO Connection
     */
-    
-    func socketCall(notification: NSNotification) {
-        class SocketIODelegate: SocketIOSocketDelegate {
-            
-            init(){}
-            
-            private func socketOnEvent(SocketIOSocket, event: String, data: AnyObject?) {
-                NSLog("Socket on Event \(event), data \(data)")
-            }
-            
-            private func socketOnPacket(socket: SocketIOSocket, packet: SocketIOPacket) {
-                NSLog("Socket on Packet \(packet)")
-            }
-            
-            private func socketOnOpen(socket: SocketIOSocket) {
-                NSLog("Socket on open")
-            }
-            
-            private func socketOnError(socket: SocketIOSocket, error: String, description: String?) {
-                NSLog("Socket on error: \(error)")
-            }
-        }
-        let data = notification.userInfo!["charData"]! as String
-        let uri = "http://yourIPAddress:8080/socket.io/"
-        var client = SocketIOClient(uri: uri, reconnect: true, timeout: 30)
+    class SocketIODelegate: SocketIOSocketDelegate {
         
-        // Sets namespace to "swift"
-        var socket = client.socket("swift")
-        var delegate = SocketIODelegate()
-        socket.delegate = delegate
-        socket.open()
-        socket.event("message", data: [data]) { (packet: SocketIOPacket) -> Void in
+        init(){}
+        
+        internal func socketOnEvent(SocketIOSocket, event: String, data: AnyObject?) {
+            NSLog("Socket on Event \(event), data \(data)")
+        }
+        
+        internal func socketOnPacket(socket: SocketIOSocket, packet: SocketIOPacket) {
+            NSLog("Socket on Packet \(packet)")
+        }
+        
+        internal func socketOnOpen(socket: SocketIOSocket) {
+            NSLog("Socket on open")
+        }
+        
+        internal func socketOnError(socket: SocketIOSocket, error: String, description: String?) {
+            NSLog("Socket on error: \(error)")
+        }
+    }
+    
+
+    func socketCall(notification: NSNotification) {
+
+        let data = notification.userInfo!["charData"]! as String
+
+        socket!.event("message", data: [data]) { (packet: SocketIOPacket) -> Void in
             //println("Callback recieved from server")
             //println(packet.data)
         }
