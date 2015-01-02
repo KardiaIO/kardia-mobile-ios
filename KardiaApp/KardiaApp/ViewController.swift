@@ -110,7 +110,7 @@ class ViewController: UIViewController, LineChartDelegate {
     func processData(notification: NSNotification) {
         // Data passed along needs to be type converted to an array of CGFloats in order to be used by lineChart
 
-        let data = notification.userInfo!["passData"]! as [String]        
+        let data = notification.userInfo!["passData"]! as [String]
         let cgFloatData = data.map {
             CGFloat(($0 as NSString).doubleValue)
         }
