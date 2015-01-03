@@ -7,9 +7,11 @@
 //
 import UIKit
 
+let statusCodes: [Int:String] = [200:"NSR", 404:"Arrythmia"]
+var statusView = UILabel()
+
 class ViewController: UIViewController, LineChartDelegate {
     var label = UILabel()
-    var statusView = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
     let uri = "http://10.6.29.229:8080/socket.io/"
@@ -153,6 +155,15 @@ class ViewController: UIViewController, LineChartDelegate {
         
         internal func socketOnEvent(SocketIOSocket, event: String, data: AnyObject?) {
             NSLog("Socket on Event \(event), data \(data)")
+            if event == "node.js" {
+                if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
+                    let code = statusCode as Int
+                    let description = statusCodes[Int(code)]!
+                    dispatch_async(dispatch_get_main_queue()) {
+                        statusView.text = description
+                    }
+                }
+            }
         }
         
         internal func socketOnPacket(socket: SocketIOSocket, packet: SocketIOPacket) {
@@ -174,8 +185,7 @@ class ViewController: UIViewController, LineChartDelegate {
         let data = notification.userInfo!["charData"]! as String
         
         socket!.event("message", data: ["amplitude":data, "time":ISOStringFromDate(NSDate())]) { (packet: SocketIOPacket) -> Void in
-            //println("Callback recieved from server")
-            //println(packet.data)
+            println("packet data is \(packet.data)")
         }
     
     }
