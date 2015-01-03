@@ -115,7 +115,7 @@ class ViewController: UIViewController, LineChartDelegate {
             CGFloat(($0 as NSString).doubleValue)
         }
         
-        // Draw graph with data
+        // Draw graph with data. Dispatch_async is necessary to force execution on the main thread, which is responsible for UI (otherwise view will not update)
         dispatch_async(dispatch_get_main_queue()) {
             self.makeChart(cgFloatData)
         }
@@ -155,10 +155,12 @@ class ViewController: UIViewController, LineChartDelegate {
         
         internal func socketOnEvent(SocketIOSocket, event: String, data: AnyObject?) {
             NSLog("Socket on Event \(event), data \(data)")
+            // When we hear an event from the server, update status view
             if event == "node.js" {
                 if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
                     let code = statusCode as Int
                     let description = statusCodes[Int(code)]!
+                    // Update status view on main thread to get view to update
                     dispatch_async(dispatch_get_main_queue()) {
                         statusView.text = description
                     }
@@ -179,18 +181,18 @@ class ViewController: UIViewController, LineChartDelegate {
         }
     }
     
-
+    // Callback function for BLE incoming data that transmits to server
     func socketCall(notification: NSNotification) {
-
         let data = notification.userInfo!["charData"]! as String
         
         socket!.event("message", data: ["amplitude":data, "time":ISOStringFromDate(NSDate())]) { (packet: SocketIOPacket) -> Void in
-            println("packet data is \(packet.data)")
+//            println("packet data is \(packet.data)")
         }
     
     }
 }
 
+// Utility function converts default NSDate format to ISO 8601
 public func ISOStringFromDate(date: NSDate) -> String {
     var dateFormatter = NSDateFormatter()
     dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
