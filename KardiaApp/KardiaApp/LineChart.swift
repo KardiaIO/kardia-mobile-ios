@@ -395,15 +395,10 @@ class LineChart: UIControl {
         var maximumYValue: CGFloat = 6.0
         var minimumYValue: CGFloat = 4.0
         var factor = drawingHeight / (maximumYValue - minimumYValue)
-        println("factor is \(factor), max is \(maximumYValue), min is \(minimumYValue)")
         var scaledDataYAxis = data.map({datum -> CGFloat in
-            println("datum \(datum)")
             var newYValue = (datum * factor) - (minimumYValue * factor)
-            println(newYValue)
             return newYValue
         })
-        println("old data is \(data)")
-        println("new data is \(scaledDataYAxis)")
         return scaledDataYAxis
     }
     
