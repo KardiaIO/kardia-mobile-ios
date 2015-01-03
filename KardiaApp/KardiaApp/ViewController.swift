@@ -9,9 +9,10 @@ import UIKit
 
 class ViewController: UIViewController, LineChartDelegate {
     var label = UILabel()
+    var statusView = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
-    let uri = "http://yourIPAddress:8080/socket.io/"
+    let uri = "http://10.6.29.229:8080/socket.io/"
     var socket: SocketIOSocket?
 
     @IBOutlet weak var BLEDisconnected: UIImageView!
@@ -41,12 +42,13 @@ class ViewController: UIViewController, LineChartDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        println(ISOStringFromDate(NSDate()))
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
         
         // Start the Bluetooth discovery process
         btDiscoverySharedInstance
 
+        // Add subview for chart heading
         label.text = "Incoming Data"
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         label.textAlignment = NSTextAlignment.Center
@@ -54,6 +56,16 @@ class ViewController: UIViewController, LineChartDelegate {
         views["label"] = label
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label]-|", options: nil, metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[label]", options: nil, metrics: nil, views: views))
+        
+        // Add subview for response code
+        statusView.text = "Waiting for data"
+        statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        statusView.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(statusView)
+        views["statusView"] = statusView
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[statusView]-|", options: nil, metrics: nil, views: views))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-330-[statusView]", options: nil, metrics: nil, views: views))
+
         
         // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
@@ -160,12 +172,23 @@ class ViewController: UIViewController, LineChartDelegate {
     func socketCall(notification: NSNotification) {
 
         let data = notification.userInfo!["charData"]! as String
-
-        socket!.event("message", data: [data]) { (packet: SocketIOPacket) -> Void in
+        
+        socket!.event("message", data: ["amplitude":data, "time":ISOStringFromDate(NSDate())]) { (packet: SocketIOPacket) -> Void in
             //println("Callback recieved from server")
             //println(packet.data)
         }
     
     }
 }
+
+public func ISOStringFromDate(date: NSDate) -> String {
+    var dateFormatter = NSDateFormatter()
+    dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        
+    return dateFormatter.stringFromDate(date).stringByAppendingString("Z")
+}
+    
+
 
