@@ -7,14 +7,14 @@
 //
 import UIKit
 
-let statusCodes: [Int:String] = [200:"NSR", 404:"Arrythmia"]
+let statusCodes: [String:String] = ["200":"NSR", "404":"Arrythmia"]
 var statusView = UILabel()
 
 class ViewController: UIViewController, LineChartDelegate {
     var label = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
-    let uri = "http://10.6.29.229:8080/socket.io/"
+    let uri = "http://10.8.26.235:8080/socket.io/"
     var socket: SocketIOSocket?
 
     @IBOutlet weak var BLEDisconnected: UIImageView!
@@ -158,8 +158,8 @@ class ViewController: UIViewController, LineChartDelegate {
             // When we hear an event from the server, update status view
             if event == "node.js" {
                 if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
-                    let code = statusCode as Int
-                    let description = statusCodes[Int(code)]!
+                    let code = statusCode as String
+                    let description = statusCodes[String(code)]!
                     // Update status view on main thread to get view to update
                     dispatch_async(dispatch_get_main_queue()) {
                         statusView.text = description
