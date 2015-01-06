@@ -7,17 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		48B9DB511A54D67900318DF1 /* EngineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB4A1A54D67900318DF1 /* EngineParser.swift */; };
-		48B9DB521A54D67900318DF1 /* EngineSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB4B1A54D67900318DF1 /* EngineSocket.swift */; };
-		48B9DB531A54D67900318DF1 /* EngineTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB4C1A54D67900318DF1 /* EngineTransport.swift */; };
-		48B9DB541A54D67900318DF1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48B9DB4D1A54D67900318DF1 /* Info.plist */; };
-		48B9DB551A54D67900318DF1 /* SocketIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB4E1A54D67900318DF1 /* SocketIO.swift */; };
-		48B9DB561A54D67900318DF1 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB501A54D67900318DF1 /* Utils.swift */; };
-		48B9DB5D1A54D68500318DF1 /* AF-NSDate-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB581A54D68500318DF1 /* AF-NSDate-Extension.swift */; };
-		48B9DB5E1A54D68500318DF1 /* alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB591A54D68500318DF1 /* alamofire.swift */; };
-		48B9DB5F1A54D68500318DF1 /* Dollar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB5A1A54D68500318DF1 /* Dollar.swift */; };
-		48B9DB601A54D68500318DF1 /* starscream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB5B1A54D68500318DF1 /* starscream.swift */; };
-		48B9DB611A54D68500318DF1 /* SwifterSnippet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B9DB5C1A54D68500318DF1 /* SwifterSnippet.swift */; };
+		48B407DB1A5B559B00D9D060 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 48B407DA1A5B559B00D9D060 /* SRWebSocket.m */; };
+		48B407DF1A5B55A600D9D060 /* SocketIOClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B407DD1A5B55A600D9D060 /* SocketIOClient.swift */; };
+		48B407E01A5B55A600D9D060 /* SwiftRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B407DE1A5B55A600D9D060 /* SwiftRegex.swift */; };
+		48B407E21A5B55DC00D9D060 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48B407E11A5B55DC00D9D060 /* Foundation.framework */; };
+		48B407E41A5B55F400D9D060 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48B407E31A5B55F400D9D060 /* Security.framework */; };
+		48B407E61A5B55FD00D9D060 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48B407E51A5B55FD00D9D060 /* CFNetwork.framework */; };
+		48B407E81A5B560E00D9D060 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 48B407E71A5B560E00D9D060 /* libicucore.dylib */; };
 		7651E8031A52132E002DD7FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E8021A52132E002DD7FC /* AppDelegate.swift */; };
 		7651E8051A52132E002DD7FC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7651E8041A52132E002DD7FC /* ViewController.swift */; };
 		7651E8081A52132E002DD7FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7651E8061A52132E002DD7FC /* Main.storyboard */; };
@@ -41,18 +37,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		48B9DB4A1A54D67900318DF1 /* EngineParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngineParser.swift; sourceTree = "<group>"; };
-		48B9DB4B1A54D67900318DF1 /* EngineSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngineSocket.swift; sourceTree = "<group>"; };
-		48B9DB4C1A54D67900318DF1 /* EngineTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngineTransport.swift; sourceTree = "<group>"; };
-		48B9DB4D1A54D67900318DF1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		48B9DB4E1A54D67900318DF1 /* SocketIO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIO.swift; sourceTree = "<group>"; };
-		48B9DB4F1A54D67900318DF1 /* SocketIOCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketIOCocoa.h; sourceTree = "<group>"; };
-		48B9DB501A54D67900318DF1 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		48B9DB581A54D68500318DF1 /* AF-NSDate-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AF-NSDate-Extension.swift"; sourceTree = "<group>"; };
-		48B9DB591A54D68500318DF1 /* alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = alamofire.swift; sourceTree = "<group>"; };
-		48B9DB5A1A54D68500318DF1 /* Dollar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dollar.swift; sourceTree = "<group>"; };
-		48B9DB5B1A54D68500318DF1 /* starscream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = starscream.swift; sourceTree = "<group>"; };
-		48B9DB5C1A54D68500318DF1 /* SwifterSnippet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwifterSnippet.swift; sourceTree = "<group>"; };
+		48B407D81A5B559B00D9D060 /* SocketRocket-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SocketRocket-Prefix.pch"; sourceTree = "<group>"; };
+		48B407D91A5B559B00D9D060 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
+		48B407DA1A5B559B00D9D060 /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
+		48B407DD1A5B55A600D9D060 /* SocketIOClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOClient.swift; sourceTree = "<group>"; };
+		48B407DE1A5B55A600D9D060 /* SwiftRegex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftRegex.swift; sourceTree = "<group>"; };
+		48B407E11A5B55DC00D9D060 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		48B407E31A5B55F400D9D060 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		48B407E51A5B55FD00D9D060 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		48B407E71A5B560E00D9D060 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		48B407E91A5B565C00D9D060 /* Kardia-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Kardia-Bridging-Header.h"; sourceTree = "<group>"; };
 		7651E7FD1A52132E002DD7FC /* KardiaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KardiaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7651E8011A52132E002DD7FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7651E8021A52132E002DD7FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +68,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48B407E81A5B560E00D9D060 /* libicucore.dylib in Frameworks */,
+				48B407E61A5B55FD00D9D060 /* CFNetwork.framework in Frameworks */,
+				48B407E41A5B55F400D9D060 /* Security.framework in Frameworks */,
+				48B407E21A5B55DC00D9D060 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,37 +85,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		48B9DB491A54D67900318DF1 /* SocketIOCocoa */ = {
+		48B407D71A5B559B00D9D060 /* SocketRocket */ = {
 			isa = PBXGroup;
 			children = (
-				48B9DB4A1A54D67900318DF1 /* EngineParser.swift */,
-				48B9DB4B1A54D67900318DF1 /* EngineSocket.swift */,
-				48B9DB4C1A54D67900318DF1 /* EngineTransport.swift */,
-				48B9DB4D1A54D67900318DF1 /* Info.plist */,
-				48B9DB4E1A54D67900318DF1 /* SocketIO.swift */,
-				48B9DB4F1A54D67900318DF1 /* SocketIOCocoa.h */,
-				48B9DB501A54D67900318DF1 /* Utils.swift */,
+				48B407D81A5B559B00D9D060 /* SocketRocket-Prefix.pch */,
+				48B407D91A5B559B00D9D060 /* SRWebSocket.h */,
+				48B407DA1A5B559B00D9D060 /* SRWebSocket.m */,
 			);
-			name = SocketIOCocoa;
-			path = ../../../../Desktop/SocketIOCocoa/SocketIOCocoa;
+			name = SocketRocket;
+			path = ../SocketRocket;
 			sourceTree = "<group>";
 		};
-		48B9DB571A54D68500318DF1 /* vendor */ = {
+		48B407DC1A5B55A600D9D060 /* SwiftIO */ = {
 			isa = PBXGroup;
 			children = (
-				48B9DB581A54D68500318DF1 /* AF-NSDate-Extension.swift */,
-				48B9DB591A54D68500318DF1 /* alamofire.swift */,
-				48B9DB5A1A54D68500318DF1 /* Dollar.swift */,
-				48B9DB5B1A54D68500318DF1 /* starscream.swift */,
-				48B9DB5C1A54D68500318DF1 /* SwifterSnippet.swift */,
+				48B407DD1A5B55A600D9D060 /* SocketIOClient.swift */,
+				48B407DE1A5B55A600D9D060 /* SwiftRegex.swift */,
 			);
-			name = vendor;
-			path = ../../../../Desktop/SocketIOCocoa/vendor;
+			name = SwiftIO;
+			path = ../SwiftIO;
 			sourceTree = "<group>";
 		};
 		7651E7F41A52132E002DD7FC = {
 			isa = PBXGroup;
 			children = (
+				48B407E91A5B565C00D9D060 /* Kardia-Bridging-Header.h */,
+				48B407E71A5B560E00D9D060 /* libicucore.dylib */,
+				48B407E51A5B55FD00D9D060 /* CFNetwork.framework */,
+				48B407E31A5B55F400D9D060 /* Security.framework */,
+				48B407E11A5B55DC00D9D060 /* Foundation.framework */,
 				CB53176B1A5260EF001EC481 /* DotCALayer.swift */,
 				7651E7FF1A52132E002DD7FC /* KardiaApp */,
 				7651E8151A52132F002DD7FC /* KardiaAppTests */,
@@ -137,8 +133,8 @@
 		7651E7FF1A52132E002DD7FC /* KardiaApp */ = {
 			isa = PBXGroup;
 			children = (
-				48B9DB571A54D68500318DF1 /* vendor */,
-				48B9DB491A54D67900318DF1 /* SocketIOCocoa */,
+				48B407DC1A5B55A600D9D060 /* SwiftIO */,
+				48B407D71A5B559B00D9D060 /* SocketRocket */,
 				7651E8251A5250DB002DD7FC /* BLE */,
 				7651E8021A52132E002DD7FC /* AppDelegate.swift */,
 				7651E8041A52132E002DD7FC /* ViewController.swift */,
@@ -267,7 +263,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48B9DB541A54D67900318DF1 /* Info.plist in Resources */,
 				7651E8081A52132E002DD7FC /* Main.storyboard in Resources */,
 				7651E80D1A52132E002DD7FC /* LaunchScreen.xib in Resources */,
 				7651E80A1A52132E002DD7FC /* Images.xcassets in Resources */,
@@ -289,21 +284,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7651E82D1A5251C9002DD7FC /* BLEDiscovery.swift in Sources */,
-				48B9DB511A54D67900318DF1 /* EngineParser.swift in Sources */,
-				48B9DB531A54D67900318DF1 /* EngineTransport.swift in Sources */,
-				48B9DB601A54D68500318DF1 /* starscream.swift in Sources */,
 				CB53176C1A5260EF001EC481 /* DotCALayer.swift in Sources */,
+				48B407E01A5B55A600D9D060 /* SwiftRegex.swift in Sources */,
 				7651E8051A52132E002DD7FC /* ViewController.swift in Sources */,
-				48B9DB611A54D68500318DF1 /* SwifterSnippet.swift in Sources */,
-				48B9DB5F1A54D68500318DF1 /* Dollar.swift in Sources */,
-				48B9DB5E1A54D68500318DF1 /* alamofire.swift in Sources */,
-				48B9DB521A54D67900318DF1 /* EngineSocket.swift in Sources */,
-				48B9DB551A54D67900318DF1 /* SocketIO.swift in Sources */,
-				48B9DB561A54D67900318DF1 /* Utils.swift in Sources */,
 				7651E8031A52132E002DD7FC /* AppDelegate.swift in Sources */,
-				48B9DB5D1A54D68500318DF1 /* AF-NSDate-Extension.swift in Sources */,
+				48B407DB1A5B559B00D9D060 /* SRWebSocket.m in Sources */,
 				7651E82C1A5251C9002DD7FC /* BLEService.swift in Sources */,
 				CB53176A1A5260A3001EC481 /* LineChart.swift in Sources */,
+				48B407DF1A5B55A600D9D060 /* SocketIOClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,6 +421,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Kardia-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -447,6 +436,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Kardia-Bridging-Header.h";
 			};
 			name = Release;
 		};

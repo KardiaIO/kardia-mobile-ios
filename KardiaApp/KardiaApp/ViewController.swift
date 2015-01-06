@@ -14,8 +14,7 @@ class ViewController: UIViewController, LineChartDelegate {
     var label = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
-    let uri = "http://10.8.26.235:8080/socket.io/"
-    var socket: SocketIOSocket?
+    var socket: SocketIOClient!
 
     @IBOutlet weak var BLEDisconnected: UIImageView!
     
@@ -73,11 +72,9 @@ class ViewController: UIViewController, LineChartDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
         
         // Open socket connection
-        var client = SocketIOClient(uri: uri, reconnect: true, timeout: 30)
-        socket = client.socket("swift")
-        let delegate = SocketIODelegate()
-        socket!.delegate = delegate
-        socket!.open()
+        socket = SocketIOClient(socketURL: "http://10.8.17.252:8080")
+        socket.connect()
+        
         
         // Listen for charValue and pass to Node Server
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
@@ -110,7 +107,7 @@ class ViewController: UIViewController, LineChartDelegate {
     func processData(notification: NSNotification) {
         // Data passed along needs to be type converted to an array of CGFloats in order to be used by lineChart
 
-        let data = notification.userInfo!["passData"]! as [String]        
+        let data = notification.userInfo!["passData"]! as [String]
         let cgFloatData = data.map {
             CGFloat(($0 as NSString).doubleValue)
         }
@@ -149,44 +146,17 @@ class ViewController: UIViewController, LineChartDelegate {
     /**
     * Socket.IO Connection
     */
-    class SocketIODelegate: SocketIOSocketDelegate {
-        
-        init(){}
-        
-        internal func socketOnEvent(SocketIOSocket, event: String, data: AnyObject?) {
-            NSLog("Socket on Event \(event), data \(data)")
-            // When we hear an event from the server, update status view
-            if event == "node.js" {
-                if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
-                    let code = statusCode as String
-                    let description = statusCodes[String(code)]!
-                    // Update status view on main thread to get view to update
-                    dispatch_async(dispatch_get_main_queue()) {
-                        statusView.text = description
-                    }
-                }
-            }
-        }
-        
-        internal func socketOnPacket(socket: SocketIOSocket, packet: SocketIOPacket) {
-            NSLog("Socket on Packet \(packet)")
-        }
-        
-        internal func socketOnOpen(socket: SocketIOSocket) {
-            NSLog("Socket on open")
-        }
-        
-        internal func socketOnError(socket: SocketIOSocket, error: String, description: String?) {
-            NSLog("Socket on error: \(error)")
-        }
-    }
     
     // Callback function for BLE incoming data that transmits to server
     func socketCall(notification: NSNotification) {
-        let data = notification.userInfo!["charData"]! as String
+        var jsonData = notification.userInfo!["charData"]! as String
+            
+        socket.emit("message", args: [
+            "data": jsonData
+        ])        
         
-        socket!.event("message", data: ["amplitude":data, "time":ISOStringFromDate(NSDate())]) { (packet: SocketIOPacket) -> Void in
-//            println("packet data is \(packet.data)")
+        socket.on("node.js") {data in
+            println(data)
         }
     
     }
