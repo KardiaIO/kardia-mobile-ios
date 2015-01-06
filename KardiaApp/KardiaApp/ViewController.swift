@@ -151,8 +151,6 @@ class ViewController: UIViewController, LineChartDelegate {
     */
     class SocketIODelegate: SocketIOSocketDelegate {
         
-        init(){}
-        
         internal func socketOnEvent(SocketIOSocket, event: String, data: AnyObject?) {
             NSLog("Socket on Event \(event), data \(data)")
             // When we hear an event from the server, update status view
