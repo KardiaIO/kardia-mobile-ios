@@ -22,8 +22,9 @@ class ViewController: UIViewController, LineChartDelegate {
 
     func makeChart(data: [CGFloat]) {
         // if the chart is already defined, just clear it and add a line.
-        if let chart: LineChart = lineChart {
-            chart.clear();
+        if var chart: LineChart = lineChart {
+            self.lineChart?.clear()
+            chart.clear()
             chart.addLine(data)
         // otherwise initialize the chart and add a line.
         } else {
@@ -72,8 +73,12 @@ class ViewController: UIViewController, LineChartDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.8.17.252:8080")
+        socket = SocketIOClient(socketURL: "http://10.6.17.255:8080")
         socket.connect()
+        
+        socket.on("node.js") {data in
+            println(data)
+        }
         
         
         // Listen for charValue and pass to Node Server
@@ -152,12 +157,9 @@ class ViewController: UIViewController, LineChartDelegate {
         var jsonData = notification.userInfo!["charData"]! as String
             
         socket.emit("message", args: [
-            "data": jsonData
-        ])        
-        
-        socket.on("node.js") {data in
-            println(data)
-        }
+            "amplitude": jsonData,
+            "time": ISOStringFromDate(NSDate())
+        ])
     
     }
 }

@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6724" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6711"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="KardiaApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9tN-up-hp2"/>
+                        <viewControllerLayoutGuide type="bottom" id="0xm-fn-637"/>
+                    </layoutGuides>
                     <view key="view" alpha="0.74999999999999978" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-
                         <subviews>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Connected" id="4DM-CG-iWF">
-                                <rect key="frame" x="65" y="392" width="190" height="71"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Connected" translatesAutoresizingMaskIntoConstraints="NO" id="4DM-CG-iWF">
+                                <rect key="frame" x="65" y="452" width="190" height="71"/>
                             </imageView>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Disconnected" id="lBW-GW-b2g">
-                                <rect key="frame" x="65" y="392" width="190" height="71"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" image="Bluetooth_Disconnected" translatesAutoresizingMaskIntoConstraints="NO" id="lBW-GW-b2g">
+                                <rect key="frame" x="65" y="452" width="190" height="71"/>
                             </imageView>
                         </subviews>
-
                         <color key="backgroundColor" red="0.50478333164449873" green="0.7568155640261226" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="0xm-fn-637" firstAttribute="top" secondItem="4DM-CG-iWF" secondAttribute="bottom" constant="45" id="5Pj-YD-XCM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4DM-CG-iWF" secondAttribute="trailing" constant="49" id="8Jf-ZP-tki"/>
+                            <constraint firstItem="4DM-CG-iWF" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="49" id="G54-Ap-hVC"/>
+                            <constraint firstItem="0xm-fn-637" firstAttribute="top" secondItem="lBW-GW-b2g" secondAttribute="bottom" constant="45" id="Jbu-1E-c8G"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lBW-GW-b2g" secondAttribute="trailing" constant="49" id="hBu-gD-TBn"/>
+                            <constraint firstItem="lBW-GW-b2g" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="49" id="ohi-hM-vri"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="BLEConnected" destination="lBW-GW-b2g" id="mEj-TR-hzS"/>
