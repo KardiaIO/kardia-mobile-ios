@@ -73,11 +73,18 @@ class ViewController: UIViewController, LineChartDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.6.17.255:8080")
+        socket = SocketIOClient(socketURL: "http://10.8.26.235:8080")
         socket.connect()
         
         socket.on("node.js") {data in
-            println(data)
+            if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
+                let code = statusCode as String
+                let description = statusCodes[String(code)]!
+                //Update status view on main thread to get view to update
+                dispatch_async(dispatch_get_main_queue()) {
+                    statusView.text = description
+                }
+            }
         }
         
         
