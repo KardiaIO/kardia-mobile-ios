@@ -392,8 +392,8 @@ class LineChart: UIControl {
         // Uncommenting the below lines will automatically scale the graph for every line drawn, which looks worse than the hard-coded version directly below.
 //        var maximumYValue = getMaximumValue()
 //        var minimumYValue = getMinimumValue()
-        var maximumYValue: CGFloat = 6.0
-        var minimumYValue: CGFloat = 4.0
+        var maximumYValue: CGFloat = 7.0
+        var minimumYValue: CGFloat = 3.0
         var factor = drawingHeight / (maximumYValue - minimumYValue)
         var scaledDataYAxis = data.map({datum -> CGFloat in
             var newYValue = (datum * factor) - (minimumYValue * factor)
