@@ -104,6 +104,10 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         cell.textLabel?.text = self.arrhythmiaEvents[indexPath.row]
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            cell.backgroundColor = UIColor.clearColor()
+        }
         return cell
     }
     
