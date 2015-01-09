@@ -191,7 +191,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             self.view.addSubview(lineChart!)
             views["chart"] = lineChart
             view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-60-[chart(==150)]", options: nil, metrics: nil, views: views))
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-60-[chart(==100)]", options: nil, metrics: nil, views: views))
         }
     }
     
