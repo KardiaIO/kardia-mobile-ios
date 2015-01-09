@@ -25,6 +25,12 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Set background gradient
+        view.backgroundColor = UIColor.clearColor()
+        var backgroundLayer = Colors().gl
+        backgroundLayer.frame = view.frame
+        view.layer.insertSublayer(backgroundLayer, atIndex: 0)
+        
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
         
@@ -67,7 +73,8 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                     statusView.text = "Status: \(description)"
 //                    statusView.shadowColor = UIColor.blueColor()
                     if code == "200" {
-                        statusView.textColor = UIColor(red: (72/255.0), green: (115/255.0), blue: (54/255.0), alpha: 1.0)
+//                        statusView.textColor = UIColor(red: (72/255.0), green: (115/255.0), blue: (54/255.0), alpha: 1.0)
+                        statusView.textColor = UIColor.whiteColor()
                     }
                     if code == "404" {
                         statusView.textColor = UIColor.redColor()
@@ -174,6 +181,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             lineChart!.animationEnabled = false
             lineChart!.gridVisible = false
             lineChart!.dotsVisible = false
+            lineChart!.axesVisible = false
             lineChart!.addLine(data)
             lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
             lineChart!.delegate = self
@@ -217,3 +225,15 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     }
 }
 
+class Colors {
+    let colorTop = UIColor(red: 60.0/255.0, green: 120.0/255.0, blue: 216.0/255.0, alpha: 1.0).CGColor
+    let colorBottom = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0).CGColor
+    
+    let gl: CAGradientLayer
+    
+    init() {
+        gl = CAGradientLayer()
+        gl.colors = [ colorTop, colorBottom]
+        gl.locations = [ 0.0, 1.0]
+    }
+}
