@@ -177,7 +177,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             lineChart!.gridVisible = false
             lineChart!.dotsVisible = false
             lineChart!.axesVisible = false
-            lineChart!.lineWidth = 4
+            lineChart!.lineWidth = 3
             lineChart!.addLine(data)
             lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
             lineChart!.delegate = self
