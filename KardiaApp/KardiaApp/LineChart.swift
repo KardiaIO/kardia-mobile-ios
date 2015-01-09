@@ -330,8 +330,8 @@ class LineChart: UIControl {
         var context = UIGraphicsGetCurrentContext()
         CGContextSetStrokeColorWithColor(context, axesColor.CGColor)
         // draw x-axis
-        CGContextMoveToPoint(context, axisInset, height/2-axisInset)
-        CGContextAddLineToPoint(context, width-axisInset, height/2-axisInset)
+        CGContextMoveToPoint(context, axisInset, height/1.4-axisInset)
+        CGContextAddLineToPoint(context, width-axisInset, height/1.4-axisInset)
         CGContextStrokePath(context)
         // draw y-axis
         CGContextMoveToPoint(context, axisInset, height-axisInset)
@@ -419,7 +419,8 @@ class LineChart: UIControl {
         var layer = CAShapeLayer()
         layer.frame = self.bounds
         layer.path = path
-        layer.strokeColor = colors[lineIndex].CGColor
+//        layer.strokeColor = colors[lineIndex].CGColor
+        layer.strokeColor = UIColor.whiteColor().CGColor
         layer.fillColor = nil
         layer.lineWidth = lineWidth
         self.layer.addSublayer(layer)
