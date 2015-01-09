@@ -10,37 +10,17 @@ import UIKit
 let statusCodes: [String:String] = ["200":"NSR", "404":"Arrythmia"]
 var statusView = UILabel()
 
-class ViewController: UIViewController, LineChartDelegate {
+class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
     var label = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
     var socket: SocketIOClient!
 
+    @IBOutlet var arrythmiaTable: UITableView!
+    
     @IBOutlet weak var BLEDisconnected: UIImageView!
     
     @IBOutlet weak var BLEConnected: UIImageView!
-
-    func makeChart(data: [CGFloat]) {
-        // if the chart is already defined, just clear it and add a line.
-        if var chart: LineChart = lineChart {
-            self.lineChart?.clear()
-            chart.clear()
-            chart.addLine(data)
-        // otherwise initialize the chart and add a line.
-        } else {
-            lineChart = LineChart()
-            lineChart!.animationEnabled = false
-            lineChart!.gridVisible = false
-            lineChart!.dotsVisible = false
-            lineChart!.addLine(data)
-            lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
-            lineChart!.delegate = self
-            self.view.addSubview(lineChart!)
-            views["chart"] = lineChart
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,15 +31,20 @@ class ViewController: UIViewController, LineChartDelegate {
         btDiscoverySharedInstance
 
         // Add subview for chart heading
+        label.font = UIFont(name: "STHeitiTC-Light", size:24)
+        label.textColor = UIColor.darkGrayColor()
+//        label.shadowColor = UIColor.blackColor()
         label.text = "Incoming Data"
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         label.textAlignment = NSTextAlignment.Center
+
         self.view.addSubview(label)
         views["label"] = label
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label]-|", options: nil, metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[label]", options: nil, metrics: nil, views: views))
         
         // Add subview for response code
+        statusView.font = UIFont(name: "STHeitiTC-Light", size:24)
         statusView.text = "Waiting for data"
         statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
         statusView.textAlignment = NSTextAlignment.Center
@@ -73,7 +58,7 @@ class ViewController: UIViewController, LineChartDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.8.26.235:8080")
+        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
         socket.connect()
         
         socket.on("node.js") {data in
@@ -82,7 +67,14 @@ class ViewController: UIViewController, LineChartDelegate {
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
                 dispatch_async(dispatch_get_main_queue()) {
-                    statusView.text = description
+                    statusView.text = "Status: \(description)"
+//                    statusView.shadowColor = UIColor.blueColor()
+                    if code == "200" {
+                        statusView.textColor = UIColor(red: (72/255.0), green: (115/255.0), blue: (54/255.0), alpha: 1.0)
+                    }
+                    if code == "404" {
+                        statusView.textColor = UIColor.redColor()
+                    }
                 }
             }
         }
@@ -137,6 +129,48 @@ class ViewController: UIViewController, LineChartDelegate {
     }
     
     
+    /**
+    * Table View Protocol Methods
+    */
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+    }
+
+    /**
+    * Line Chart functionality
+    */
+    
+    // Draw line when data is received
+    func makeChart(data: [CGFloat]) {
+        // if the chart is already defined, just clear it and add a line.
+        if var chart: LineChart = lineChart {
+            self.lineChart?.clear()
+            chart.clear()
+            chart.addLine(data)
+            // otherwise initialize the chart and add a line.
+        } else {
+            lineChart = LineChart()
+            lineChart!.animationEnabled = false
+            lineChart!.gridVisible = false
+            lineChart!.dotsVisible = false
+            lineChart!.addLine(data)
+            lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
+            lineChart!.delegate = self
+            self.view.addSubview(lineChart!)
+            views["chart"] = lineChart
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
+        }
+    }
     
     /**
     * Line chart delegate method.
