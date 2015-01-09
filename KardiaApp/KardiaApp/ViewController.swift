@@ -15,8 +15,9 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
     var socket: SocketIOClient!
+    var arrhythmiaEvents: [String] = []
 
-    @IBOutlet var arrythmiaTable: UITableView!
+    @IBOutlet var arrhythmiaTable: UITableView!
     
     @IBOutlet weak var BLEDisconnected: UIImageView!
     
@@ -24,7 +25,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        println(ISOStringFromDate(NSDate()))
+        self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
         
         // Start the Bluetooth discovery process
@@ -59,6 +60,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         
         // Open socket connection
         socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
+//        socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
         socket.on("node.js") {data in
@@ -67,6 +69,12 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
                 dispatch_async(dispatch_get_main_queue()) {
+//                    if statusView.text == "NSR" && code == "404" {
+                    if statusView.text == "Waiting for data" {
+                        let time = NSDate()
+                        self.arrhythmiaEvents.append(ISOStringFromDate(time))
+                        self.arrhythmiaTable.reloadData()
+                    }
                     statusView.text = "Status: \(description)"
 //                    statusView.shadowColor = UIColor.blueColor()
                     if code == "200" {
@@ -82,6 +90,26 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         
         // Listen for charValue and pass to Node Server
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
+    }
+    
+    /**
+    * Table View Protocol Methods
+    */
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.arrhythmiaEvents.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+        println("foo")
+        println(self.arrhythmiaEvents[indexPath.row])
+        cell.textLabel?.text = self.arrhythmiaEvents[indexPath.row]
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
     }
     
     override func shouldAutorotate() -> Bool {
@@ -129,21 +157,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     }
     
     
-    /**
-    * Table View Protocol Methods
-    */
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return UITableViewCell()
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-    }
+
 
     /**
     * Line Chart functionality
