@@ -25,8 +25,8 @@
                                     <outlet property="delegate" destination="vXZ-lx-hvc" id="g3H-tf-VSs"/>
                                 </connections>
                             </tableView>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="Bluetooth-disconnected" translatesAutoresizingMaskIntoConstraints="NO" id="mnm-MX-12s">
-                                <rect key="frame" x="239" y="478" width="32" height="32"/>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="Bluetooth-disconnected" translatesAutoresizingMaskIntoConstraints="NO" id="h7g-IL-FcA">
+                                <rect key="frame" x="267" y="512" width="48" height="48"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.75900150711517311" green="0.88165050585512128" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -38,7 +38,7 @@
                     </view>
                     <connections>
                         <outlet property="arrhythmiaTable" destination="3hK-1k-Fbr" id="k9M-gg-qie"/>
-                        <outlet property="imgBluetoothStatus" destination="mnm-MX-12s" id="5UK-vE-PnM"/>
+                        <outlet property="imgBluetoothStatus" destination="h7g-IL-FcA" id="KB8-Rt-wa9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -47,7 +47,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Bluetooth-disconnected" width="32" height="32"/>
+        <image name="Bluetooth-disconnected" width="48" height="48"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
