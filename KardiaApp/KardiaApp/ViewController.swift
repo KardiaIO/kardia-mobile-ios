@@ -178,13 +178,14 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             lineChart!.dotsVisible = false
             lineChart!.axesVisible = false
             lineChart!.lineWidth = 3
+            lineChart!.axisInset = -30
             lineChart!.addLine(data)
             lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
             lineChart!.delegate = self
             self.view.addSubview(lineChart!)
             views["chart"] = lineChart
             view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-30-[chart(==250)]", options: nil, metrics: nil, views: views))
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-60-[chart(==150)]", options: nil, metrics: nil, views: views))
         }
     }
     
