@@ -11,7 +11,6 @@ let statusCodes: [String:String] = ["200":"NSR", "404":"Arrythmia"]
 var statusView = UILabel()
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
-    var label = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
     var socket: SocketIOClient!
@@ -31,40 +30,25 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         
         // Start the Bluetooth discovery process
         btDiscoverySharedInstance
-
-        // Add subview for chart heading
-        label.font = UIFont(name: "STHeitiTC-Light", size:24)
-        label.textColor = UIColor.darkGrayColor()
-//        label.shadowColor = UIColor.blackColor()
-        label.text = "Incoming Data"
-        label.setTranslatesAutoresizingMaskIntoConstraints(false)
-        label.textAlignment = NSTextAlignment.Center
-
-        self.view.addSubview(label)
-        views["label"] = label
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[label]-|", options: nil, metrics: nil, views: views))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[label]", options: nil, metrics: nil, views: views))
         
         // Add subview for response code
-        statusView.font = UIFont(name: "STHeitiTC-Light", size:24)
+        statusView.font = UIFont(name: "STHeitiTC-Light", size:30)
         statusView.text = "Waiting for data"
         statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
         statusView.textAlignment = NSTextAlignment.Center
         self.view.addSubview(statusView)
         views["statusView"] = statusView
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[statusView]-|", options: nil, metrics: nil, views: views))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-330-[statusView]", options: nil, metrics: nil, views: views))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[statusView]", options: nil, metrics: nil, views: views))
 
         var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
-        
-
         
         
         // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
+        socket = SocketIOClient(socketURL: "http://10.8.26.235:8080")
 //        socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
@@ -196,7 +180,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             self.view.addSubview(lineChart!)
             views["chart"] = lineChart
             view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[label]-[chart(==200)]", options: nil, metrics: nil, views: views))
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-30-[chart(==250)]", options: nil, metrics: nil, views: views))
         }
     }
     
@@ -204,7 +188,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     * Line chart delegate method.
     */
     func didSelectDataPoint(x: CGFloat, yValues: Array<CGFloat>) {
-        label.text = "x: \(x)     y: \(yValues)"
+
     }
     
     
