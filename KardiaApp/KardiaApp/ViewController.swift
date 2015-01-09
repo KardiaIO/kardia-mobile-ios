@@ -39,6 +39,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         
         // Add subview for response code
         statusView.font = UIFont(name: "STHeitiTC-Light", size:30)
+        statusView.textColor = UIColor.whiteColor()
         statusView.text = "Waiting for data"
         statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
         statusView.textAlignment = NSTextAlignment.Center
@@ -68,14 +69,8 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                     if statusView.text == "Waiting for data" {
                         let time = NSDate()
                         self.arrhythmiaTimes.append(time)
-//                        self.arrhythmiaEvents.append(timeAgoSinceDate(time, false))
                     }
                     statusView.text = "Status: \(description)"
-//                    statusView.shadowColor = UIColor.blueColor()
-                    if code == "200" {
-//                        statusView.textColor = UIColor(red: (72/255.0), green: (115/255.0), blue: (54/255.0), alpha: 1.0)
-                        statusView.textColor = UIColor.whiteColor()
-                    }
                     if code == "404" {
                         statusView.textColor = UIColor.redColor()
                     }
@@ -182,6 +177,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             lineChart!.gridVisible = false
             lineChart!.dotsVisible = false
             lineChart!.axesVisible = false
+            lineChart!.lineWidth = 4
             lineChart!.addLine(data)
             lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
             lineChart!.delegate = self
