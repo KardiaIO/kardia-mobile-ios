@@ -7,7 +7,7 @@
 //
 import UIKit
 
-let statusCodes: [String:String] = ["200":"NSR", "404":"Arrythmia"]
+let statusCodes: [String:String] = ["200":"NSR", "404":"Arrhythmia"]
 var statusView = UILabel()
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -65,12 +65,14 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
                 dispatch_async(dispatch_get_main_queue()) {
-//                    if statusView.text == "NSR" && code == "404" {
-                    if statusView.text == "Waiting for data" {
+                    if statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
                         let time = NSDate()
                         self.arrhythmiaTimes.append(time)
                     }
                     statusView.text = "Status: \(description)"
+                    if code == "200" {
+                        statusView.textColor = UIColor.whiteColor()
+                    }
                     if code == "404" {
                         statusView.textColor = UIColor.redColor()
                     }
@@ -104,7 +106,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         cell.textLabel?.text = self.arrhythmiaEvents[indexPath.row]
-        
+        cell.textLabel?.font = UIFont(name: "STHeitiTC-Light", size: 16)
         dispatch_async(dispatch_get_main_queue()) {
             cell.backgroundColor = UIColor.clearColor()
         }
