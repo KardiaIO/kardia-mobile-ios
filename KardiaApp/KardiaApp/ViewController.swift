@@ -16,6 +16,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     var views: Dictionary<String, AnyObject> = [:]
     var socket: SocketIOClient!
     var arrhythmiaEvents: [String] = []
+    var arrhythmiaTimes: [NSDate] = []
 
     @IBOutlet var arrhythmiaTable: UITableView!
     
@@ -54,6 +55,10 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[statusView]-|", options: nil, metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-330-[statusView]", options: nil, metrics: nil, views: views))
 
+        var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
+        
+
+        
         
         // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
@@ -72,8 +77,8 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
 //                    if statusView.text == "NSR" && code == "404" {
                     if statusView.text == "Waiting for data" {
                         let time = NSDate()
-                        self.arrhythmiaEvents.append(ISOStringFromDate(time))
-                        self.arrhythmiaTable.reloadData()
+                        self.arrhythmiaTimes.append(time)
+//                        self.arrhythmiaEvents.append(timeAgoSinceDate(time, false))
                     }
                     statusView.text = "Status: \(description)"
 //                    statusView.shadowColor = UIColor.blueColor()
@@ -92,6 +97,16 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
     }
     
+    
+    func redrawTable() {
+        self.arrhythmiaEvents = self.arrhythmiaTimes.map {
+            timeAgoSinceDate($0, false)
+        }
+        dispatch_async(dispatch_get_main_queue()) {
+            self.arrhythmiaTable.reloadData()
+        }
+    }
+    
     /**
     * Table View Protocol Methods
     */
@@ -102,8 +117,6 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-        println("foo")
-        println(self.arrhythmiaEvents[indexPath.row])
         cell.textLabel?.text = self.arrhythmiaEvents[indexPath.row]
         return cell
     }
@@ -148,6 +161,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         dispatch_async(dispatch_get_main_queue()) {
             self.makeChart(cgFloatData)
         }
+        
     }
 
     
@@ -230,4 +244,66 @@ public func ISOStringFromDate(date: NSDate) -> String {
 }
     
 
-
+func timeAgoSinceDate(date:NSDate, numericDates:Bool) -> String {
+    let calendar = NSCalendar.currentCalendar()
+    let unitFlags = NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitHour | NSCalendarUnit.CalendarUnitDay | NSCalendarUnit.CalendarUnitWeekOfYear | NSCalendarUnit.CalendarUnitMonth | NSCalendarUnit.CalendarUnitYear | NSCalendarUnit.CalendarUnitSecond
+    let now = NSDate()
+    let earliest = now.earlierDate(date)
+    let latest = (earliest == now) ? date : now
+    let components:NSDateComponents = calendar.components(unitFlags, fromDate: earliest, toDate: latest, options: nil)
+    
+    if (components.year >= 2) {
+        return "\(components.year) years ago"
+    } else if (components.year >= 1){
+        if (numericDates){
+            return "1 year ago"
+        } else {
+            return "Last year"
+        }
+    } else if (components.month >= 2) {
+        return "\(components.month) months ago"
+    } else if (components.month >= 1){
+        if (numericDates){
+            return "1 month ago"
+        } else {
+            return "Last month"
+        }
+    } else if (components.weekOfYear >= 2) {
+        return "\(components.weekOfYear) weeks ago"
+    } else if (components.weekOfYear >= 1){
+        if (numericDates){
+            return "1 week ago"
+        } else {
+            return "Last week"
+        }
+    } else if (components.day >= 2) {
+        return "\(components.day) days ago"
+    } else if (components.day >= 1){
+        if (numericDates){
+            return "1 day ago"
+        } else {
+            return "Yesterday"
+        }
+    } else if (components.hour >= 2) {
+        return "\(components.hour) hours ago"
+    } else if (components.hour >= 1){
+        if (numericDates){
+            return "1 hour ago"
+        } else {
+            return "An hour ago"
+        }
+    } else if (components.minute >= 2) {
+        return "\(components.minute) minutes ago"
+    } else if (components.minute >= 1){
+        if (numericDates){
+            return "1 minute ago"
+        } else {
+            return "A minute ago"
+        }
+    } else if (components.second >= 3) {
+        return "\(components.second) seconds ago"
+    } else {
+        return "Just now"
+    }
+    
+}
