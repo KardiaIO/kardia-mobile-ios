@@ -16,12 +16,15 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     var socket: SocketIOClient!
     var arrhythmiaEvents: [String] = []
     var arrhythmiaTimes: [NSDate] = []
+    
 
     @IBOutlet var arrhythmiaTable: UITableView!
     
-    @IBOutlet weak var BLEDisconnected: UIImageView!
-    
-    @IBOutlet weak var BLEConnected: UIImageView!
+//    @IBOutlet weak var BLEDisconnected: UIImageView!
+//    
+//    @IBOutlet weak var BLEConnected: UIImageView!
+
+    @IBOutlet weak var imgBluetoothStatus: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,8 +34,13 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         backgroundLayer.frame = view.frame
         view.layer.insertSublayer(backgroundLayer, atIndex: 0)
         
+        // Register table cell behavior
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        // Add listener for change in BT connection status
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
+        
+        
         
         // Start the Bluetooth discovery process
         btDiscoverySharedInstance
@@ -129,9 +137,9 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             // Set image based on connection status
             if let isConnected: Bool = userInfo["isConnected"] {
                 if isConnected {
-                    self.BLEDisconnected.image = UIImage(named: "Bluetooth_Connected")
+                    self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
                 } else {
-                    self.BLEConnected.image = UIImage(named: "Bluetooth_Disconnected")
+                    self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-disconnected")
                 }
             }
         });
