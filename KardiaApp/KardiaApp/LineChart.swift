@@ -419,7 +419,8 @@ class LineChart: UIControl {
         var layer = CAShapeLayer()
         layer.frame = self.bounds
         layer.path = path
-        layer.strokeColor = colors[lineIndex].CGColor
+//        layer.strokeColor = colors[lineIndex].CGColor
+        layer.strokeColor = UIColor.whiteColor().CGColor
         layer.fillColor = nil
         layer.lineWidth = lineWidth
         self.layer.addSublayer(layer)
