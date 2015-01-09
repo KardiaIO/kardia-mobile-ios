@@ -330,8 +330,8 @@ class LineChart: UIControl {
         var context = UIGraphicsGetCurrentContext()
         CGContextSetStrokeColorWithColor(context, axesColor.CGColor)
         // draw x-axis
-        CGContextMoveToPoint(context, axisInset, height/2-axisInset)
-        CGContextAddLineToPoint(context, width-axisInset, height/2-axisInset)
+        CGContextMoveToPoint(context, axisInset, height/1.4-axisInset)
+        CGContextAddLineToPoint(context, width-axisInset, height/1.4-axisInset)
         CGContextStrokePath(context)
         // draw y-axis
         CGContextMoveToPoint(context, axisInset, height-axisInset)
