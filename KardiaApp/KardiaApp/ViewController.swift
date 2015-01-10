@@ -26,6 +26,9 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
 
     @IBOutlet weak var imgBluetoothStatus: UIImageView!
     
+    @IBOutlet weak var BPMLabel: UILabel!
+    @IBOutlet weak var BPMView: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Set background gradient
@@ -68,6 +71,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         socket.connect()
         
         socket.on("node.js") {data in
+            // Interpret status code and display appropriate description
             if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
                 let code = statusCode as String
                 let description = statusCodes[String(code)]!
@@ -84,6 +88,14 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                     if code == "404" {
                         statusView.textColor = UIColor.redColor()
                     }
+                }
+            }
+            
+            // Display BPM
+            if let BPM: NSObject = data!["heartRate"]! as? NSObject {
+                let BPMnum = BPM as String
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.BPMView.text = BPMnum
                 }
             }
         }
