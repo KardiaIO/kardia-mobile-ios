@@ -7,7 +7,7 @@
 //
 import UIKit
 
-let statusCodes: [String:String] = ["200":"NSR", "404":"Arrythmia"]
+let statusCodes: [String:String] = ["200":"NSR", "404":"Arrhythmia"]
 var statusView = UILabel()
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -16,12 +16,18 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     var socket: SocketIOClient!
     var arrhythmiaEvents: [String] = []
     var arrhythmiaTimes: [NSDate] = []
+    
 
     @IBOutlet var arrhythmiaTable: UITableView!
     
-    @IBOutlet weak var BLEDisconnected: UIImageView!
+//    @IBOutlet weak var BLEDisconnected: UIImageView!
+//    
+//    @IBOutlet weak var BLEConnected: UIImageView!
+
+    @IBOutlet weak var imgBluetoothStatus: UIImageView!
     
-    @IBOutlet weak var BLEConnected: UIImageView!
+    @IBOutlet weak var BPMLabel: UILabel!
+    @IBOutlet weak var BPMView: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,8 +37,13 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         backgroundLayer.frame = view.frame
         view.layer.insertSublayer(backgroundLayer, atIndex: 0)
         
+        // Register table cell behavior
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        // Add listener for change in BT connection status
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
+        
+        
         
         // Start the Bluetooth discovery process
         btDiscoverySharedInstance
@@ -60,20 +71,31 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         socket.connect()
         
         socket.on("node.js") {data in
+            // Interpret status code and display appropriate description
             if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
                 let code = statusCode as String
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
                 dispatch_async(dispatch_get_main_queue()) {
-//                    if statusView.text == "NSR" && code == "404" {
-                    if statusView.text == "Waiting for data" {
+                    if statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
                         let time = NSDate()
                         self.arrhythmiaTimes.append(time)
                     }
                     statusView.text = "Status: \(description)"
+                    if code == "200" {
+                        statusView.textColor = UIColor.whiteColor()
+                    }
                     if code == "404" {
                         statusView.textColor = UIColor.redColor()
                     }
+                }
+            }
+            
+            // Display BPM
+            if let BPM: NSObject = data!["heartRate"]! as? NSObject {
+                let BPMnum = BPM as String
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.BPMView.text = BPMnum
                 }
             }
         }
@@ -104,6 +126,10 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         cell.textLabel?.text = self.arrhythmiaEvents[indexPath.row]
+        cell.textLabel?.font = UIFont(name: "STHeitiTC-Light", size: 16)
+        dispatch_async(dispatch_get_main_queue()) {
+            cell.backgroundColor = UIColor.clearColor()
+        }
         return cell
     }
     
@@ -123,9 +149,9 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             // Set image based on connection status
             if let isConnected: Bool = userInfo["isConnected"] {
                 if isConnected {
-                    self.BLEDisconnected.image = UIImage(named: "Bluetooth_Connected")
+                    self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
                 } else {
-                    self.BLEConnected.image = UIImage(named: "Bluetooth_Disconnected")
+                    self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-disconnected")
                 }
             }
         });
@@ -185,7 +211,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             self.view.addSubview(lineChart!)
             views["chart"] = lineChart
             view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-60-[chart(==150)]", options: nil, metrics: nil, views: views))
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-60-[chart(==100)]", options: nil, metrics: nil, views: views))
         }
     }
     
