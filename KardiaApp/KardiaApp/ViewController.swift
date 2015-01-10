@@ -37,6 +37,48 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         backgroundLayer.frame = view.frame
         view.layer.insertSublayer(backgroundLayer, atIndex: 0)
         
+        // Draw polygons
+        let hexagonContainerSquareSideLength = CGRectGetWidth(view.frame) / 4
+        let connectionStatusContainer = Polygon(frame: CGRect(x: 0, y: 0, width: hexagonContainerSquareSideLength, height: hexagonContainerSquareSideLength))
+        let connectionStatusHexagon = drawPolygonLayer(
+            x: CGRectGetWidth(connectionStatusContainer.frame) / 2,
+            y: CGRectGetHeight(connectionStatusContainer.frame) / 2,
+            radius: CGRectGetWidth(connectionStatusContainer.frame) / 2,
+            sides: 6,
+            color: UIColor.blueColor()
+        )
+        connectionStatusContainer.layer.addSublayer(connectionStatusHexagon)
+        
+        let BPMContainer = Polygon(frame: CGRect(x: 100, y: 0, width: hexagonContainerSquareSideLength, height: hexagonContainerSquareSideLength))
+        let BPMHexagon = drawPolygonLayer(
+            x: CGRectGetWidth(BPMContainer.frame) / 2,
+            y: CGRectGetHeight(BPMContainer.frame) / 2,
+            radius: CGRectGetWidth(BPMContainer.frame) / 2,
+            sides: 6,
+            color: UIColor.blueColor()
+        )
+        BPMContainer.layer.addSublayer(BPMHexagon)
+        
+        let statusViewContainer = Polygon(frame: CGRect(x: 50, y: 0, width: hexagonContainerSquareSideLength, height: hexagonContainerSquareSideLength))
+        let statusViewHexagon = drawPolygonLayer(
+            x: CGRectGetWidth(statusViewContainer.frame) / 2,
+            y: CGRectGetHeight(statusViewContainer.frame) / 2,
+            radius: CGRectGetWidth(statusViewContainer.frame) / 2,
+            sides: 6,
+            color: UIColor.blueColor()
+        )
+        statusViewContainer.layer.addSublayer(statusViewHexagon)
+        
+        // Add polygons to view and give a low z-index
+        view.insertSubview(connectionStatusContainer, belowSubview: arrhythmiaTable)
+        view.insertSubview(BPMContainer, belowSubview: arrhythmiaTable)
+        view.insertSubview(statusViewContainer, belowSubview: arrhythmiaTable)
+        views["connectionStatusContainer"] = connectionStatusContainer
+        views["BPMContainer"] = BPMContainer
+        views["statusViewContainer"] = statusViewContainer
+        views["imgBluetoothStatus"] = imgBluetoothStatus
+//        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imgBluetoothStatus]-0-[statusViewContainer]", options: nil, metrics: nil, views: views))
+        
         // Register table cell behavior
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
@@ -60,7 +102,6 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[statusView]", options: nil, metrics: nil, views: views))
 
         var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
-        
         
         // Listen for incoming data from Bluetooth
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
