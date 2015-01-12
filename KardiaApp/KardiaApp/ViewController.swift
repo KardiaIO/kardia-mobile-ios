@@ -8,9 +8,9 @@
 import UIKit
 
 let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
-var statusView = UILabel()
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
+    var statusView = UILabel()
     var lineChart: LineChart?
     var views: Dictionary<String, AnyObject> = [:]
     var socket: SocketIOClient!
@@ -144,16 +144,16 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
                 dispatch_async(dispatch_get_main_queue()) {
-                    if statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
+                    if self.statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
                         let time = NSDate()
                         self.arrhythmiaTimes.append(time)
                     }
-                    statusView.text = "Status: \(description)"
+                    self.statusView.text = "Status: \(description)"
                     if code == "200" {
-                        statusView.textColor = UIColor.whiteColor()
+                        self.statusView.textColor = UIColor.whiteColor()
                     }
                     if code == "404" {
-                        statusView.textColor = UIColor.redColor()
+                        self.statusView.textColor = UIColor.redColor()
                     }
                 }
             }
