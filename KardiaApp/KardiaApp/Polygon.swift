@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+/**
+* Helper functions for drawing hexagons.
+*/
+
 func degree2radian(a:CGFloat)->CGFloat {
     let b = CGFloat(M_PI) * a/180
     return b
