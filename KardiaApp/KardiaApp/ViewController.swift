@@ -16,7 +16,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     var socket: SocketIOClient!
     var arrhythmiaEvents: [String] = []
     var arrhythmiaTimes: [NSDate] = []
-    
+    var imgBluetoothStatus = UIImageView(image: UIImage(named:"Bluetooth-disconnected"))
 
     @IBOutlet var arrhythmiaTable: UITableView!
     
@@ -24,7 +24,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
 //    
 //    @IBOutlet weak var BLEConnected: UIImageView!
 
-    @IBOutlet weak var imgBluetoothStatus: UIImageView!
+    
     
     @IBOutlet weak var BPMLabel: UILabel!
     @IBOutlet weak var BPMView: UILabel!
@@ -36,10 +36,16 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         var backgroundLayer = Colors().gl
         backgroundLayer.frame = view.frame
         view.layer.insertSublayer(backgroundLayer, atIndex: 0)
-        
+
         // Draw polygons
         let hexagonContainerSquareSideLength = CGRectGetWidth(view.frame) / 4
-        let connectionStatusContainer = Polygon(frame: CGRect(x: 0, y: 0, width: hexagonContainerSquareSideLength, height: hexagonContainerSquareSideLength))
+        let hexagonVerticalPosition = CGRectGetHeight(view.frame) * 19 / 24
+        let connectionStatusContainer = UIView(frame: CGRect(
+            x: CGRectGetWidth(view.frame) * 3 / 8,
+            y: hexagonVerticalPosition,
+            width: hexagonContainerSquareSideLength,
+            height: hexagonContainerSquareSideLength
+        ))
         let connectionStatusHexagon = drawPolygonLayer(
             x: CGRectGetWidth(connectionStatusContainer.frame) / 2,
             y: CGRectGetHeight(connectionStatusContainer.frame) / 2,
@@ -49,7 +55,12 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         )
         connectionStatusContainer.layer.addSublayer(connectionStatusHexagon)
         
-        let BPMContainer = Polygon(frame: CGRect(x: 100, y: 0, width: hexagonContainerSquareSideLength, height: hexagonContainerSquareSideLength))
+        let BPMContainer = UIView(frame: CGRect(
+            x: CGRectGetWidth(view.frame) * 11 / 16,
+            y: hexagonVerticalPosition,
+            width: hexagonContainerSquareSideLength,
+            height: hexagonContainerSquareSideLength
+        ))
         let BPMHexagon = drawPolygonLayer(
             x: CGRectGetWidth(BPMContainer.frame) / 2,
             y: CGRectGetHeight(BPMContainer.frame) / 2,
@@ -59,7 +70,13 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         )
         BPMContainer.layer.addSublayer(BPMHexagon)
         
-        let statusViewContainer = Polygon(frame: CGRect(x: 50, y: 0, width: hexagonContainerSquareSideLength, height: hexagonContainerSquareSideLength))
+        let statusViewContainer = UIView(frame: CGRect(
+            x: CGRectGetWidth(view.frame) * 1 / 16,
+            y: hexagonVerticalPosition,
+            width: hexagonContainerSquareSideLength,
+            height: hexagonContainerSquareSideLength
+            
+        ))
         let statusViewHexagon = drawPolygonLayer(
             x: CGRectGetWidth(statusViewContainer.frame) / 2,
             y: CGRectGetHeight(statusViewContainer.frame) / 2,
@@ -70,14 +87,21 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         statusViewContainer.layer.addSublayer(statusViewHexagon)
         
         // Add polygons to view and give a low z-index
-        view.insertSubview(connectionStatusContainer, belowSubview: arrhythmiaTable)
-        view.insertSubview(BPMContainer, belowSubview: arrhythmiaTable)
-        view.insertSubview(statusViewContainer, belowSubview: arrhythmiaTable)
+        view.addSubview(imgBluetoothStatus)
+        view.insertSubview(connectionStatusContainer, belowSubview: imgBluetoothStatus)
+        view.insertSubview(BPMContainer, belowSubview: imgBluetoothStatus)
+        view.insertSubview(statusViewContainer, belowSubview: imgBluetoothStatus)
+
         views["connectionStatusContainer"] = connectionStatusContainer
         views["BPMContainer"] = BPMContainer
         views["statusViewContainer"] = statusViewContainer
         views["imgBluetoothStatus"] = imgBluetoothStatus
-//        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imgBluetoothStatus]-0-[statusViewContainer]", options: nil, metrics: nil, views: views))
+        
+        imgBluetoothStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
+        // Center BT status view in hexagon
+        var imgBTConstraintX = NSLayoutConstraint(item: imgBluetoothStatus, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: connectionStatusContainer, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        var imgBTConstraintY = NSLayoutConstraint(item: imgBluetoothStatus, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: connectionStatusContainer, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0)
+        view.addConstraints([imgBTConstraintX, imgBTConstraintY])
         
         // Register table cell behavior
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")

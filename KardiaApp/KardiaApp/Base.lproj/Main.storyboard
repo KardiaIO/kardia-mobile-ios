@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,9 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" image="Bluetooth-disconnected" translatesAutoresizingMaskIntoConstraints="NO" id="h7g-IL-FcA">
-                                <rect key="frame" x="242" y="473" width="48" height="48"/>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="BPM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DW8-2V-dpW">
                                 <rect key="frame" x="141" y="500" width="38" height="21"/>
                                 <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="16"/>
@@ -43,11 +39,9 @@
                         </subviews>
                         <color key="backgroundColor" red="0.75900150711517311" green="0.88165050585512128" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="h7g-IL-FcA" secondAttribute="trailing" constant="-11" id="5aP-aD-Wi1"/>
                             <constraint firstAttribute="centerX" secondItem="YaV-OM-nlc" secondAttribute="centerX" constant="-0.5" id="I7G-Bb-5ro"/>
                             <constraint firstAttribute="centerX" secondItem="DW8-2V-dpW" secondAttribute="centerX" id="KNp-UK-ChS"/>
                             <constraint firstItem="DW8-2V-dpW" firstAttribute="top" secondItem="YaV-OM-nlc" secondAttribute="bottom" constant="-5" id="cdG-YY-vko"/>
-                            <constraint firstItem="0xm-fn-637" firstAttribute="top" secondItem="h7g-IL-FcA" secondAttribute="bottom" constant="8" id="ewO-2L-xaD"/>
                             <constraint firstItem="0xm-fn-637" firstAttribute="top" secondItem="3hK-1k-Fbr" secondAttribute="bottom" constant="124" id="geS-H4-Jy4"/>
                             <constraint firstItem="0xm-fn-637" firstAttribute="top" secondItem="DW8-2V-dpW" secondAttribute="bottom" constant="47" id="v0n-Gz-XmZ"/>
                         </constraints>
@@ -56,7 +50,6 @@
                         <outlet property="BPMLabel" destination="DW8-2V-dpW" id="dte-th-aQy"/>
                         <outlet property="BPMView" destination="YaV-OM-nlc" id="B8R-HA-xTW"/>
                         <outlet property="arrhythmiaTable" destination="3hK-1k-Fbr" id="k9M-gg-qie"/>
-                        <outlet property="imgBluetoothStatus" destination="h7g-IL-FcA" id="KB8-Rt-wa9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -64,9 +57,6 @@
             <point key="canvasLocation" x="195" y="233"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="Bluetooth-disconnected" width="48" height="48"/>
-    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
