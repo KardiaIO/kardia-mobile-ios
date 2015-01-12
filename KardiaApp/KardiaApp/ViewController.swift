@@ -7,7 +7,7 @@
 //
 import UIKit
 
-let statusCodes: [String:String] = ["200":"NSR", "404":"Arrhythmia"]
+let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
 var statusView = UILabel()
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
@@ -96,9 +96,9 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         views["BPMContainer"] = BPMContainer
         views["statusViewContainer"] = statusViewContainer
         views["imgBluetoothStatus"] = imgBluetoothStatus
-        
-        imgBluetoothStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
+
         // Center BT status view in hexagon
+        imgBluetoothStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
         var imgBTConstraintX = NSLayoutConstraint(item: imgBluetoothStatus, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: connectionStatusContainer, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
         var imgBTConstraintY = NSLayoutConstraint(item: imgBluetoothStatus, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: connectionStatusContainer, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0)
         view.addConstraints([imgBTConstraintX, imgBTConstraintY])
@@ -117,14 +117,16 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         // Add subview for response code
         statusView.font = UIFont(name: "STHeitiTC-Light", size:30)
         statusView.textColor = UIColor.whiteColor()
-        statusView.text = "Waiting for data"
+        statusView.text = "N/A"
         statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
         statusView.textAlignment = NSTextAlignment.Center
         self.view.addSubview(statusView)
         views["statusView"] = statusView
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[statusView]-|", options: nil, metrics: nil, views: views))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[statusView]", options: nil, metrics: nil, views: views))
-
+        var statusViewConstraintX = NSLayoutConstraint(item: statusView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: statusViewContainer, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        var statusViewConstraintY = NSLayoutConstraint(item: statusView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: statusViewContainer, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0)
+        view.addConstraints([statusViewConstraintX, statusViewConstraintY])
+        
+        // Add timer to redraw arrhythmia events table
         var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
         
         // Listen for incoming data from Bluetooth
