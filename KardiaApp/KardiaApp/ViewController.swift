@@ -10,30 +10,38 @@ import UIKit
 let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
+    // Instantiate views
     var statusView = UILabel()
     var lineChart: LineChart?
-    var views: Dictionary<String, AnyObject> = [:]
-    var socket: SocketIOClient!
-    var arrhythmiaEvents: [String] = []
-    var arrhythmiaTimes: [NSDate] = []
     var imgBluetoothStatus = UIImageView(image: UIImage(named:"Bluetooth-disconnected"))
     var BPMLabel = UILabel()
     var BPMView = UILabel()
     let textColor = UIColor.blueColor()
-
     @IBOutlet var arrhythmiaTable: UITableView!
+    var views: Dictionary<String, AnyObject> = [:]
+
+    var socket: SocketIOClient!
     
-//    @IBOutlet weak var BPMLabel: UILabel!
-//    @IBOutlet weak var BPMView: UILabel!
+    // Store arrhythmia events in the events array, which will be constantly re-mapped into human-readable strings in the times array.
+    var arrhythmiaEvents: [String] = []
+    var arrhythmiaTimes: [NSDate] = []
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Set background gradient
         view.backgroundColor = UIColor.clearColor()
         var backgroundLayer = Gradient().gl
         backgroundLayer.frame = view.frame
         view.layer.insertSublayer(backgroundLayer, atIndex: 0)
 
+        /**
+        * Rendering Hexagons:
+        * Hexagons are drawn as polygon layers in a CGRect UI element.
+        * They are instantiated with sizes and positions relative to the size of the screen.
+        */
+        
         // Draw polygons
         let hexagonContainerSquareSideLength = CGRectGetWidth(view.frame) / 4
         let hexagonVerticalPosition = CGRectGetHeight(view.frame) * 19 / 24
@@ -94,20 +102,34 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         views["statusViewContainer"] = statusViewContainer
         views["imgBluetoothStatus"] = imgBluetoothStatus
 
-        // Center BT status view in hexagon
+        /**
+        * Render three primary views:
+        * Status, connection, and BPM views are rendered and constrained to be centered in their respective hexes.
+        */
+        
+        // Center BT connection status view in center hexagon
         imgBluetoothStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
-        var imgBTConstraintX = NSLayoutConstraint(item: imgBluetoothStatus, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: connectionStatusContainer, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
-        var imgBTConstraintY = NSLayoutConstraint(item: imgBluetoothStatus, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: connectionStatusContainer, attribute: NSLayoutAttribute.CenterY, multiplier: 1, constant: 0)
+        var imgBTConstraintX = NSLayoutConstraint(
+            item: imgBluetoothStatus,
+            attribute: NSLayoutAttribute.CenterX,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: connectionStatusContainer,
+            attribute: NSLayoutAttribute.CenterX,
+            multiplier: 1,
+            constant: 0
+        )
+        var imgBTConstraintY = NSLayoutConstraint(
+            item: imgBluetoothStatus,
+            attribute: NSLayoutAttribute.CenterY,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: connectionStatusContainer,
+            attribute: NSLayoutAttribute.CenterY,
+            multiplier: 1,
+            constant: 0
+        )
         view.addConstraints([imgBTConstraintX, imgBTConstraintY])
         
-        // Register table cell behavior
-        self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        // Add listener for change in BT connection status
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
-        
-        
-        // Add subview for BPM display
+        // BPM view constraints and styling (view refers to the actual number, label is the "BPM" label
         BPMView.font = UIFont(name: "STHeitiTC-Light", size:30)
         BPMView.textColor = textColor
         BPMView.text = "60"
@@ -162,7 +184,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         )
         view.addConstraints([BPMLabelConstraintX, BPMLabelConstraintY])
         
-        // Add subview for response code
+        // Response code constraints and styling
         statusView.font = UIFont(name: "STHeitiTC-Light", size:26)
         statusView.textColor = textColor
         statusView.text = "N/A"
@@ -190,17 +212,28 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         )
         view.addConstraints([statusViewConstraintX, statusViewConstraintY])
         
+        
+        /*
+        * Arrhythmia events table
+        */
+        
+        // Register table cell behavior
+        self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
         // Add timer to redraw arrhythmia events table
         var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
+
         
-        // Listen for incoming data from Bluetooth
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
+        /**
+        * Sockets
+        */
         
         // Open socket connection
         socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
 //        socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
+        // Listen for response events from the server.
         socket.on("node.js") {data in
             // Interpret status code and display appropriate description
             if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
@@ -232,14 +265,29 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         }
         
         
-        // Listen for charValue and pass to Node Server
+        /**
+        * Bluetooth event listeners
+        * Listen for changes in bluetooth connection and new incoming data
+        */
+        
+        // Listen for change in BT connection status
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
+        
+        // Listen for incoming data from Bluetooth to render
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
+        
+        // Listen for incoming data (charValue) to pass to Node Server
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
 
-        // Start the Bluetooth discovery process
+        
+        
+        /**
+        * Start the Bluetooth discovery process
+        */
         btDiscoverySharedInstance
     }
     
-    
+    // Method called by interval timer to constantly update human-readable time strings in arrhythmia events table
     func redrawTable() {
         self.arrhythmiaEvents = self.arrhythmiaTimes.map {
             timeAgoSinceDate($0, false)
@@ -275,6 +323,10 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         return false
     }
     
+    /**
+    * Callback functions for Bluetooth events
+    */
+    
     func connectionChanged(notification: NSNotification) {
         // Connection status changed. Indicate on GUI.
         let userInfo = notification.userInfo as [String: Bool]
@@ -291,10 +343,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         });
     }
     
-
-
-    // Callback function called when ViewController learns of incoming data
-
+    // Callback function invoked when ViewController learns of incoming data
     func processData(notification: NSNotification) {
         // Data passed along needs to be type converted to an array of CGFloats in order to be used by lineChart
 
@@ -310,14 +359,17 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         
     }
 
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    // Callback function for BLE incoming data that transmits to server
+    func socketCall(notification: NSNotification) {
+        var jsonData = notification.userInfo!["charData"]! as String
+        
+        socket.emit("message", args: [
+            "amplitude": jsonData,
+            "time": ISOStringFromDate(NSDate())
+            ])
+        
     }
     
-    
-
 
     /**
     * Line Chart functionality
@@ -330,7 +382,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             self.lineChart?.clear()
             chart.clear()
             chart.addLine(data)
-            // otherwise initialize the chart and add a line.
+        // otherwise initialize and constrain the chart and add a line.
         } else {
             lineChart = LineChart()
             lineChart!.animationEnabled = false
@@ -354,50 +406,27 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 multiplier: 0.4,
                 constant: 0
             )
-//            var chartConstraintTop = NSLayoutConstraint(
-//                item: lineChart!,
-//                attribute: NSLayoutAttribute.CenterX,
-//                relatedBy: NSLayoutRelation.Equal,
-//                toItem: view,
-//                attribute: NSLayoutAttribute.Height,
-//                multiplier: 0.4,
-//                constant: 0
-//            )
             view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-120-[chart]", options: nil, metrics: nil, views: views))
             view.addConstraints([chartConstraintHeight])
         }
     }
     
-    /**
-    * Line chart delegate method.
-    */
+    // Linechart delegate method
     func didSelectDataPoint(x: CGFloat, yValues: Array<CGFloat>) {
 
     }
     
     
-    /**
-    * Redraw chart on device rotation.
-    */
+    // Redraw chart on device rotation
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         if let chart = lineChart {
             chart.setNeedsDisplay()
         }
     }
     
-    /**
-    * Socket.IO Connection
-    */
-    
-    // Callback function for BLE incoming data that transmits to server
-    func socketCall(notification: NSNotification) {
-        var jsonData = notification.userInfo!["charData"]! as String
-            
-        socket.emit("message", args: [
-            "amplitude": jsonData,
-            "time": ISOStringFromDate(NSDate())
-        ])
-    
+    // Required for view controller protocol
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
 }
 
