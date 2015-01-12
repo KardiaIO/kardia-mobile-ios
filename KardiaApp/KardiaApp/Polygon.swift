@@ -9,25 +9,6 @@
 import Foundation
 import UIKit
 
-class Polygon: UIView {
-    
-    
-//    override func drawRect(rect:CGRect)
-//        
-//    {
-//        
-//        
-//        var ctx = UIGraphicsGetCurrentContext()
-//        
-//        drawPolygonUsingPath(ctx: ctx, x: CGRectGetMidX(rect),y: CGRectGetMidY(rect),radius: CGRectGetWidth(rect)/3, sides: 3, color: UIColor.blueColor())
-//        
-//        drawPolygonBezier(x: CGRectGetMidX(rect),y: CGRectGetMidY(rect),radius: CGRectGetWidth(rect)/4, sides: 4, color: UIColor.yellowColor())
-//        
-//        drawPolygon(ctx: ctx, x: CGRectGetMidX(rect),y: CGRectGetMidY(rect),radius: CGRectGetWidth(rect)/5, sides: 6, color: UIColor.greenColor())
-//        
-//    }
-}
-
 func degree2radian(a:CGFloat)->CGFloat {
     let b = CGFloat(M_PI) * a/180
     return b
