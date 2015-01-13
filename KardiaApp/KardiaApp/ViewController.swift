@@ -8,8 +8,11 @@
 import UIKit
 
 let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
+var firstLoad = true
+var arrhythmiaEvents: [String] = []
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
+    
     // Instantiate views
     var statusView = UILabel()
     var lineChart: LineChart?
@@ -19,17 +22,18 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     let textColor = UIColor.blueColor()
     @IBOutlet var arrhythmiaTable: UITableView!
     var views: Dictionary<String, AnyObject> = [:]
+    
 
     var socket: SocketIOClient!
     
     // Store arrhythmia events in the events array, which will be constantly re-mapped into human-readable strings in the times array.
-    var arrhythmiaEvents: [String] = []
+
     var arrhythmiaTimes: [NSDate] = []
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Set background gradient
         view.backgroundColor = UIColor.clearColor()
         var backgroundLayer = Gradient().gl
@@ -221,7 +225,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         // Add timer to redraw arrhythmia events table
-        var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
+//        var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
 
         
         /**
@@ -229,7 +233,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         */
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
+        socket = SocketIOClient(socketURL: "http://10.8.26.235:8080")
 //        socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
@@ -241,7 +245,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
                 dispatch_async(dispatch_get_main_queue()) {
-                    if self.statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
+                    if self.statusView.text?.rangeOfString("ARR") == nil && code == "404" {
                         let time = NSDate()
                         self.arrhythmiaTimes.append(time)
                     }
@@ -262,6 +266,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                     self.BPMView.text = BPMnum
                 }
             }
+            
         }
         
         
@@ -270,26 +275,30 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         * Listen for changes in bluetooth connection and new incoming data
         */
         
+
         // Listen for change in BT connection status
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
         
         // Listen for incoming data from Bluetooth to render
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
-        
+
+                if (firstLoad) {
         // Listen for incoming data (charValue) to pass to Node Server
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
-
-        
+            firstLoad = false
+        }
+    
         
         /**
         * Start the Bluetooth discovery process
         */
         btDiscoverySharedInstance
+        
     }
     
     // Method called by interval timer to constantly update human-readable time strings in arrhythmia events table
     func redrawTable() {
-        self.arrhythmiaEvents = self.arrhythmiaTimes.map {
+        arrhythmiaEvents = self.arrhythmiaTimes.map {
             timeAgoSinceDate($0, false)
         }
         dispatch_async(dispatch_get_main_queue()) {
@@ -302,12 +311,12 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     */
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.arrhythmiaEvents.count
+        return arrhythmiaEvents.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-        cell.textLabel?.text = self.arrhythmiaEvents[indexPath.row]
+        cell.textLabel?.text = arrhythmiaEvents[indexPath.row]
         cell.textLabel?.font = UIFont(name: "STHeitiTC-Light", size: 16)
         dispatch_async(dispatch_get_main_queue()) {
             cell.backgroundColor = UIColor.clearColor()
