@@ -7,69 +7,233 @@
 //
 import UIKit
 
-let statusCodes: [String:String] = ["200":"NSR", "404":"Arrhythmia"]
-var statusView = UILabel()
+let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
+    // Instantiate views
+    var statusView = UILabel()
     var lineChart: LineChart?
+    var imgBluetoothStatus = UIImageView(image: UIImage(named:"Bluetooth-disconnected"))
+    var BPMLabel = UILabel()
+    var BPMView = UILabel()
+    let textColor = UIColor.blueColor()
+    @IBOutlet var arrhythmiaTable: UITableView!
     var views: Dictionary<String, AnyObject> = [:]
+
     var socket: SocketIOClient!
+    
+    // Store arrhythmia events in the events array, which will be constantly re-mapped into human-readable strings in the times array.
     var arrhythmiaEvents: [String] = []
     var arrhythmiaTimes: [NSDate] = []
-    
 
-    @IBOutlet var arrhythmiaTable: UITableView!
-    
-//    @IBOutlet weak var BLEDisconnected: UIImageView!
-//    
-//    @IBOutlet weak var BLEConnected: UIImageView!
-
-    @IBOutlet weak var imgBluetoothStatus: UIImageView!
-    
-    @IBOutlet weak var BPMLabel: UILabel!
-    @IBOutlet weak var BPMView: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Set background gradient
         view.backgroundColor = UIColor.clearColor()
-        var backgroundLayer = Colors().gl
+        var backgroundLayer = Gradient().gl
         backgroundLayer.frame = view.frame
         view.layer.insertSublayer(backgroundLayer, atIndex: 0)
+
+        /**
+        * Rendering Hexagons:
+        * Hexagons are drawn as polygon layers in a CGRect UI element.
+        * They are instantiated with sizes and positions relative to the size of the screen.
+        */
         
-        // Register table cell behavior
-        self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        // Draw polygons
+        let hexagonContainerSquareSideLength = CGRectGetWidth(view.frame) / 4
+        let hexagonVerticalPosition = CGRectGetHeight(view.frame) * 19 / 24
+        let connectionStatusContainer = UIView(frame: CGRect(
+            x: CGRectGetWidth(view.frame) * 3 / 8,
+            y: hexagonVerticalPosition,
+            width: hexagonContainerSquareSideLength,
+            height: hexagonContainerSquareSideLength
+        ))
+        let connectionStatusHexagon = drawPolygonLayer(
+            x: CGRectGetWidth(connectionStatusContainer.frame) / 2,
+            y: CGRectGetHeight(connectionStatusContainer.frame) / 2,
+            radius: CGRectGetWidth(connectionStatusContainer.frame) / 2,
+            sides: 6,
+            color: UIColor.whiteColor()
+        )
+        connectionStatusContainer.layer.addSublayer(connectionStatusHexagon)
         
-        // Add listener for change in BT connection status
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
+        let BPMContainer = UIView(frame: CGRect(
+            x: CGRectGetWidth(view.frame) * 11 / 16,
+            y: hexagonVerticalPosition,
+            width: hexagonContainerSquareSideLength,
+            height: hexagonContainerSquareSideLength
+        ))
+        let BPMHexagon = drawPolygonLayer(
+            x: CGRectGetWidth(BPMContainer.frame) / 2,
+            y: CGRectGetHeight(BPMContainer.frame) / 2,
+            radius: CGRectGetWidth(BPMContainer.frame) / 2,
+            sides: 6,
+            color: UIColor.whiteColor()
+        )
+        BPMContainer.layer.addSublayer(BPMHexagon)
         
+        let statusViewContainer = UIView(frame: CGRect(
+            x: CGRectGetWidth(view.frame) * 1 / 16,
+            y: hexagonVerticalPosition,
+            width: hexagonContainerSquareSideLength,
+            height: hexagonContainerSquareSideLength
+            
+        ))
+        let statusViewHexagon = drawPolygonLayer(
+            x: CGRectGetWidth(statusViewContainer.frame) / 2,
+            y: CGRectGetHeight(statusViewContainer.frame) / 2,
+            radius: CGRectGetWidth(statusViewContainer.frame) / 2,
+            sides: 6,
+            color: UIColor.whiteColor()
+        )
+        statusViewContainer.layer.addSublayer(statusViewHexagon)
         
+        // Add polygons to view and give a low z-index
+        view.addSubview(imgBluetoothStatus)
+        view.insertSubview(connectionStatusContainer, belowSubview: imgBluetoothStatus)
+        view.insertSubview(BPMContainer, belowSubview: imgBluetoothStatus)
+        view.insertSubview(statusViewContainer, belowSubview: imgBluetoothStatus)
+
+        views["connectionStatusContainer"] = connectionStatusContainer
+        views["BPMContainer"] = BPMContainer
+        views["statusViewContainer"] = statusViewContainer
+        views["imgBluetoothStatus"] = imgBluetoothStatus
+
+        /**
+        * Render three primary views:
+        * Status, connection, and BPM views are rendered and constrained to be centered in their respective hexes.
+        */
         
-        // Start the Bluetooth discovery process
-        btDiscoverySharedInstance
+        // Center BT connection status view in center hexagon
+        imgBluetoothStatus.setTranslatesAutoresizingMaskIntoConstraints(false)
+        var imgBTConstraintX = NSLayoutConstraint(
+            item: imgBluetoothStatus,
+            attribute: NSLayoutAttribute.CenterX,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: connectionStatusContainer,
+            attribute: NSLayoutAttribute.CenterX,
+            multiplier: 1,
+            constant: 0
+        )
+        var imgBTConstraintY = NSLayoutConstraint(
+            item: imgBluetoothStatus,
+            attribute: NSLayoutAttribute.CenterY,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: connectionStatusContainer,
+            attribute: NSLayoutAttribute.CenterY,
+            multiplier: 1,
+            constant: 0
+        )
+        view.addConstraints([imgBTConstraintX, imgBTConstraintY])
         
-        // Add subview for response code
-        statusView.font = UIFont(name: "STHeitiTC-Light", size:30)
-        statusView.textColor = UIColor.whiteColor()
-        statusView.text = "Waiting for data"
+        // BPM view constraints and styling (view refers to the actual number, label is the "BPM" label
+        BPMView.font = UIFont(name: "STHeitiTC-Light", size:30)
+        BPMView.textColor = textColor
+        BPMView.text = "60"
+        BPMView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        BPMView.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(BPMView)
+        views["BPMView"] = BPMView
+        var BPMViewConstraintX = NSLayoutConstraint(
+            item: BPMView,
+            attribute: NSLayoutAttribute.CenterX,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: BPMContainer,
+            attribute: NSLayoutAttribute.CenterX,
+            multiplier: 1,
+            constant: 0
+        )
+        var BPMViewConstraintY = NSLayoutConstraint(
+            item: BPMView,
+            attribute: NSLayoutAttribute.CenterY,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: BPMContainer,
+            attribute: NSLayoutAttribute.CenterY,
+            multiplier: 1,
+            constant: -8
+        )
+        view.addConstraints([BPMViewConstraintX, BPMViewConstraintY])
+
+        BPMLabel.font = UIFont(name: "STHeitiTC-Light", size:14)
+        BPMLabel.textColor = textColor
+        BPMLabel.text = "BPM"
+        BPMLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        BPMLabel.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(BPMLabel)
+        views["BPMLabel"] = BPMLabel
+        var BPMLabelConstraintX = NSLayoutConstraint(
+            item: BPMLabel,
+            attribute: NSLayoutAttribute.CenterX,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: BPMContainer,
+            attribute: NSLayoutAttribute.CenterX,
+            multiplier: 1,
+            constant: 0
+        )
+        var BPMLabelConstraintY = NSLayoutConstraint(
+            item: BPMLabel,
+            attribute: NSLayoutAttribute.CenterY,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: BPMContainer,
+            attribute: NSLayoutAttribute.CenterY,
+            multiplier: 1,
+            constant: 20
+        )
+        view.addConstraints([BPMLabelConstraintX, BPMLabelConstraintY])
+        
+        // Response code constraints and styling
+        statusView.font = UIFont(name: "STHeitiTC-Light", size:26)
+        statusView.textColor = textColor
+        statusView.text = "N/A"
         statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
         statusView.textAlignment = NSTextAlignment.Center
         self.view.addSubview(statusView)
         views["statusView"] = statusView
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[statusView]-|", options: nil, metrics: nil, views: views))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-80-[statusView]", options: nil, metrics: nil, views: views))
-
+        var statusViewConstraintX = NSLayoutConstraint(
+            item: statusView,
+            attribute: NSLayoutAttribute.CenterX,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: statusViewContainer,
+            attribute: NSLayoutAttribute.CenterX,
+            multiplier: 1,
+            constant: 0
+        )
+        var statusViewConstraintY = NSLayoutConstraint(
+            item: statusView,
+            attribute: NSLayoutAttribute.CenterY,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: statusViewContainer,
+            attribute: NSLayoutAttribute.CenterY,
+            multiplier: 1,
+            constant: 0
+        )
+        view.addConstraints([statusViewConstraintX, statusViewConstraintY])
+        
+        
+        /*
+        * Arrhythmia events table
+        */
+        
+        // Register table cell behavior
+        self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        // Add timer to redraw arrhythmia events table
         var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
+
         
-        
-        // Listen for incoming data from Bluetooth
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
+        /**
+        * Sockets
+        */
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.8.26.235:8080")
+        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
 //        socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
+        // Listen for response events from the server.
         socket.on("node.js") {data in
             // Interpret status code and display appropriate description
             if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
@@ -77,16 +241,16 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
                 dispatch_async(dispatch_get_main_queue()) {
-                    if statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
+                    if self.statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
                         let time = NSDate()
                         self.arrhythmiaTimes.append(time)
                     }
-                    statusView.text = "Status: \(description)"
+                    self.statusView.text = description
                     if code == "200" {
-                        statusView.textColor = UIColor.whiteColor()
+                        self.statusView.textColor = self.textColor
                     }
                     if code == "404" {
-                        statusView.textColor = UIColor.redColor()
+                        self.statusView.textColor = UIColor.redColor()
                     }
                 }
             }
@@ -101,11 +265,29 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         }
         
         
-        // Listen for charValue and pass to Node Server
+        /**
+        * Bluetooth event listeners
+        * Listen for changes in bluetooth connection and new incoming data
+        */
+        
+        // Listen for change in BT connection status
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
+        
+        // Listen for incoming data from Bluetooth to render
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
+        
+        // Listen for incoming data (charValue) to pass to Node Server
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
+
+        
+        
+        /**
+        * Start the Bluetooth discovery process
+        */
+        btDiscoverySharedInstance
     }
     
-    
+    // Method called by interval timer to constantly update human-readable time strings in arrhythmia events table
     func redrawTable() {
         self.arrhythmiaEvents = self.arrhythmiaTimes.map {
             timeAgoSinceDate($0, false)
@@ -141,6 +323,10 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         return false
     }
     
+    /**
+    * Callback functions for Bluetooth events
+    */
+    
     func connectionChanged(notification: NSNotification) {
         // Connection status changed. Indicate on GUI.
         let userInfo = notification.userInfo as [String: Bool]
@@ -157,10 +343,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         });
     }
     
-
-
-    // Callback function called when ViewController learns of incoming data
-
+    // Callback function invoked when ViewController learns of incoming data
     func processData(notification: NSNotification) {
         // Data passed along needs to be type converted to an array of CGFloats in order to be used by lineChart
 
@@ -176,14 +359,17 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         
     }
 
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    // Callback function for BLE incoming data that transmits to server
+    func socketCall(notification: NSNotification) {
+        var jsonData = notification.userInfo!["charData"]! as String
+        
+        socket.emit("message", args: [
+            "amplitude": jsonData,
+            "time": ISOStringFromDate(NSDate())
+            ])
+        
     }
     
-    
-
 
     /**
     * Line Chart functionality
@@ -196,7 +382,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             self.lineChart?.clear()
             chart.clear()
             chart.addLine(data)
-            // otherwise initialize the chart and add a line.
+        // otherwise initialize and constrain the chart and add a line.
         } else {
             lineChart = LineChart()
             lineChart!.animationEnabled = false
@@ -211,52 +397,36 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             self.view.addSubview(lineChart!)
             views["chart"] = lineChart
             view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
-            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[statusView]-60-[chart(==100)]", options: nil, metrics: nil, views: views))
+            var chartConstraintHeight = NSLayoutConstraint(
+                item: lineChart!,
+                attribute: NSLayoutAttribute.Height,
+                relatedBy: NSLayoutRelation.Equal,
+                toItem: view,
+                attribute: NSLayoutAttribute.Height,
+                multiplier: 0.4,
+                constant: 0
+            )
+            view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-120-[chart]", options: nil, metrics: nil, views: views))
+            view.addConstraints([chartConstraintHeight])
         }
     }
     
-    /**
-    * Line chart delegate method.
-    */
+    // Linechart delegate method
     func didSelectDataPoint(x: CGFloat, yValues: Array<CGFloat>) {
 
     }
     
     
-    /**
-    * Redraw chart on device rotation.
-    */
+    // Redraw chart on device rotation
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         if let chart = lineChart {
             chart.setNeedsDisplay()
         }
     }
     
-    /**
-    * Socket.IO Connection
-    */
-    
-    // Callback function for BLE incoming data that transmits to server
-    func socketCall(notification: NSNotification) {
-        var jsonData = notification.userInfo!["charData"]! as String
-            
-        socket.emit("message", args: [
-            "amplitude": jsonData,
-            "time": ISOStringFromDate(NSDate())
-        ])
-    
+    // Required for view controller protocol
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
 }
 
-class Colors {
-    let colorTop = UIColor(red: 60.0/255.0, green: 120.0/255.0, blue: 216.0/255.0, alpha: 1.0).CGColor
-    let colorBottom = UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 1.0).CGColor
-    
-    let gl: CAGradientLayer
-    
-    init() {
-        gl = CAGradientLayer()
-        gl.colors = [ colorTop, colorBottom]
-        gl.locations = [ 0.0, 1.0]
-    }
-}
