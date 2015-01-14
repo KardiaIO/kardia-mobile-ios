@@ -76,29 +76,13 @@
                     <view key="view" alpha="0.74999999999999978" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3hK-1k-Fbr">
-                                <rect key="frame" x="67" y="299" width="187" height="166"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="vXZ-lx-hvc" id="ijG-zQ-uZM"/>
-                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="g3H-tf-VSs"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
                         <color key="backgroundColor" red="0.75900150711517311" green="0.88165050585512128" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstItem="0xm-fn-637" firstAttribute="top" secondItem="3hK-1k-Fbr" secondAttribute="bottom" constant="124" id="geS-H4-Jy4"/>
-                        </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="P4c-bz-x6F" appends="YES" id="Rcm-hS-vvZ"/>
                             <outletCollection property="gestureRecognizers" destination="ZeL-fr-NbC" appends="YES" id="4ul-dl-Wcy"/>
                         </connections>
                     </view>
-                    <connections>
-                        <outlet property="arrhythmiaTable" destination="3hK-1k-Fbr" id="k9M-gg-qie"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="P4c-bz-x6F">

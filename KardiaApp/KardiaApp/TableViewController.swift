@@ -16,6 +16,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("redrawTable"), name: "Abnormality", object: nil)
+
     }
     
     /**
@@ -55,5 +57,10 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    
+    // Method called by interval timer to constantly update human-readable time strings in arrhythmia events table
+    func redrawTable() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.arrhythmiaTable.reloadData()
+        }
+    }
 }

@@ -13,7 +13,7 @@ var lastCode = "0"
 var arrhythmiaEvents: [String] = []
 var arrhythmiaTimes: [NSDate] = [NSDate(), NSDate(), NSDate()]
 
-class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, LineChartDelegate {
     
     // Instantiate views
     var statusView = UILabel()
@@ -22,17 +22,10 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     var BPMLabel = UILabel()
     var BPMView = UILabel()
     let textColor = UIColor.blueColor()
-    @IBOutlet var arrhythmiaTable: UITableView!
     var views: Dictionary<String, AnyObject> = [:]
-    
 
     var socket: SocketIOClient!
-    
-    // Store arrhythmia events in the events array, which will be constantly re-mapped into human-readable strings in the times array.
 
-    
-
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -219,23 +212,12 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         view.addConstraints([statusViewConstraintX, statusViewConstraintY])
         
         
-        /*
-        * Arrhythmia events table
-        */
-        
-        // Register table cell behavior
-        self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        // Add timer to redraw arrhythmia events table
-        var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
-
-        
         /**
         * Sockets
         */
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.8.26.235:8080")
+        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
 //        socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
@@ -249,6 +231,8 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 if lastCode != "404" && code == "404" {
                     let time = NSDate()
                     arrhythmiaTimes.append(time)
+                    NSNotificationCenter.defaultCenter().postNotificationName("Abnormality", object: self, userInfo: nil)
+
                 }
                 dispatch_async(dispatch_get_main_queue()) {
                     self.statusView.text = description
@@ -299,42 +283,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         
     }
     
-    // Method called by interval timer to constantly update human-readable time strings in arrhythmia events table
-    func redrawTable() {
-        arrhythmiaEvents = arrhythmiaTimes.map {
-            timeAgoSinceDate($0, false)
-        }
-        dispatch_async(dispatch_get_main_queue()) {
-            self.arrhythmiaTable.reloadData()
-        }
-    }
-    
-    /**
-    * Table View Protocol Methods
-    */
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrhythmiaEvents.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-        cell.textLabel?.text = arrhythmiaEvents[indexPath.row]
-        cell.textLabel?.font = UIFont(name: "STHeitiTC-Light", size: 16)
-        dispatch_async(dispatch_get_main_queue()) {
-            cell.backgroundColor = UIColor.clearColor()
-        }
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-    }
-    
-    override func shouldAutorotate() -> Bool {
-        return false
-    }
-    
+
     /**
     * Callback functions for Bluetooth events
     */
