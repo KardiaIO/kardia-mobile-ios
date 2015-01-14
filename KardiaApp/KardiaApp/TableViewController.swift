@@ -17,8 +17,6 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-
-        println(arrhythmiaEvents)
     }
     
     /*
@@ -34,7 +32,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-        cell.textLabel?.text = arrhythmiaEvents[indexPath.row]
+        cell.textLabel?.text = ISOStringFromDate(arrhythmiaTimes[indexPath.row])
         cell.textLabel?.font = UIFont(name: "STHeitiTC-Light", size: 16)
         dispatch_async(dispatch_get_main_queue()) {
             cell.backgroundColor = UIColor.clearColor()

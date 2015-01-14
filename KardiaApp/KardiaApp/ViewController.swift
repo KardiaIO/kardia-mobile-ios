@@ -9,7 +9,9 @@ import UIKit
 
 let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
 var firstLoad = true
+var lastCode = "0"
 var arrhythmiaEvents: [String] = []
+var arrhythmiaTimes: [NSDate] = []
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
     
@@ -28,7 +30,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     
     // Store arrhythmia events in the events array, which will be constantly re-mapped into human-readable strings in the times array.
 
-    var arrhythmiaTimes: [NSDate] = []
+    
 
     
     override func viewDidLoad() {
@@ -225,7 +227,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         // Add timer to redraw arrhythmia events table
-//        var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
+        var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
 
         
         /**
@@ -244,11 +246,11 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 let code = statusCode as String
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
+                if lastCode != "404" && code == "404" {
+                    let time = NSDate()
+                    arrhythmiaTimes.append(time)
+                }
                 dispatch_async(dispatch_get_main_queue()) {
-                    if self.statusView.text?.rangeOfString("ARR") == nil && code == "404" {
-                        let time = NSDate()
-                        self.arrhythmiaTimes.append(time)
-                    }
                     self.statusView.text = description
                     if code == "200" {
                         self.statusView.textColor = self.textColor
@@ -257,6 +259,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                         self.statusView.textColor = UIColor.redColor()
                     }
                 }
+                lastCode = code
             }
             
             // Display BPM
@@ -298,7 +301,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     
     // Method called by interval timer to constantly update human-readable time strings in arrhythmia events table
     func redrawTable() {
-        arrhythmiaEvents = self.arrhythmiaTimes.map {
+        arrhythmiaEvents = arrhythmiaTimes.map {
             timeAgoSinceDate($0, false)
         }
         dispatch_async(dispatch_get_main_queue()) {
