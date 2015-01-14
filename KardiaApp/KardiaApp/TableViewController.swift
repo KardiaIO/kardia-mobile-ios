@@ -32,8 +32,12 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+        cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
         cell.textLabel?.text = ISOStringFromDate(arrhythmiaTimes[indexPath.row])
         cell.textLabel?.font = UIFont(name: "STHeitiTC-Light", size: 16)
+        cell.detailTextLabel?.text = "Arrhythmia"
+        cell.detailTextLabel?.font = UIFont(name: "Helvetica-LightOblique", size: 12)
+        cell.detailTextLabel?.textColor = UIColor.redColor()
         dispatch_async(dispatch_get_main_queue()) {
             cell.backgroundColor = UIColor.clearColor()
         }
