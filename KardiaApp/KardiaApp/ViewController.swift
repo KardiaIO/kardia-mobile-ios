@@ -12,6 +12,7 @@ var firstLoad = true
 var lastCode = "0"
 var arrhythmiaEvents: [String] = []
 var arrhythmiaTimes: [NSDate] = [NSDate(), NSDate(), NSDate()]
+var bluetoothConnected = false
 
 class ViewController: UIViewController, LineChartDelegate {
     
@@ -28,7 +29,14 @@ class ViewController: UIViewController, LineChartDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // Set Bluetooth connection status image to correct image
+        if bluetoothConnected {
+            self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
+        } else {
+            self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-disconnected")
+        }
+        
         // Set background gradient
         view.backgroundColor = UIColor.clearColor()
         var backgroundLayer = Gradient().gl
@@ -211,7 +219,6 @@ class ViewController: UIViewController, LineChartDelegate {
         )
         view.addConstraints([statusViewConstraintX, statusViewConstraintY])
         
-        
         /**
         * Sockets
         */
@@ -298,8 +305,10 @@ class ViewController: UIViewController, LineChartDelegate {
             if let isConnected: Bool = userInfo["isConnected"] {
                 if isConnected {
                     self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
+                    bluetoothConnected = true
                 } else {
                     self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-disconnected")
+                    bluetoothConnected = false
                     self.BPMView.text = "- -"
                     lastCode = "0"
                     self.statusView.text = statusCodes[lastCode]
