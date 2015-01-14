@@ -7,7 +7,7 @@
 //
 import UIKit
 
-let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
+let statusCodes: [String:String] = ["0":"N/A", "200":"NSR", "404":"ARR"]
 var firstLoad = true
 var lastCode = "0"
 var arrhythmiaEvents: [String] = []
@@ -131,7 +131,7 @@ class ViewController: UIViewController, LineChartDelegate {
         // BPM view constraints and styling (view refers to the actual number, label is the "BPM" label
         BPMView.font = UIFont(name: "STHeitiTC-Light", size:30)
         BPMView.textColor = textColor
-        BPMView.text = "60"
+        BPMView.text = "- -"
         BPMView.setTranslatesAutoresizingMaskIntoConstraints(false)
         BPMView.textAlignment = NSTextAlignment.Center
         self.view.addSubview(BPMView)
@@ -186,7 +186,7 @@ class ViewController: UIViewController, LineChartDelegate {
         // Response code constraints and styling
         statusView.font = UIFont(name: "STHeitiTC-Light", size:26)
         statusView.textColor = textColor
-        statusView.text = "N/A"
+        statusView.text = statusCodes[lastCode]
         statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
         statusView.textAlignment = NSTextAlignment.Center
         self.view.addSubview(statusView)
@@ -269,10 +269,11 @@ class ViewController: UIViewController, LineChartDelegate {
         // Listen for incoming data from Bluetooth to render
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
 
-                if (firstLoad) {
-        // Listen for incoming data (charValue) to pass to Node Server
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
-            firstLoad = false
+
+        // Listen for incoming data (charValue) to pass to Node Server. Use the firstLoad boolean in order to avoid registering multiple event listeners.
+        if (firstLoad) {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
+                firstLoad = false
         }
     
         
@@ -299,6 +300,9 @@ class ViewController: UIViewController, LineChartDelegate {
                     self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
                 } else {
                     self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-disconnected")
+                    self.BPMView.text = "- -"
+                    lastCode = "0"
+                    self.statusView.text = statusCodes[lastCode]
                 }
             }
         });
