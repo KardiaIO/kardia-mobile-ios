@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Table View Controller-->
@@ -16,12 +17,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AjX-hz-cg5">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AjX-hz-cg5">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="tNS-tC-8wa"/>
-                                </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="9vI-Vc-ZCa" id="AgH-6t-Z2o"/>
                                     <outlet property="delegate" destination="9vI-Vc-ZCa" id="Zpt-9a-wKM"/>
@@ -30,6 +28,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="AjX-hz-cg5" firstAttribute="centerX" secondItem="PCP-sD-UTe" secondAttribute="centerX" id="Tdm-We-Bck"/>
+                            <constraint firstItem="AjX-hz-cg5" firstAttribute="width" secondItem="PCP-sD-UTe" secondAttribute="width" id="fBZ-CE-Iln"/>
+                            <constraint firstAttribute="centerY" secondItem="AjX-hz-cg5" secondAttribute="centerY" constant="-10" id="fWE-Xk-uCZ"/>
+                            <constraint firstItem="AjX-hz-cg5" firstAttribute="height" secondItem="PCP-sD-UTe" secondAttribute="height" multiplier="0.9" id="oko-qp-AqS"/>
+                        </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="a7o-ql-ZIi" appends="YES" id="VCf-Q3-Lyi"/>
                             <outletCollection property="gestureRecognizers" destination="XGa-Ol-CJF" appends="YES" id="WE8-Xx-Zve"/>
