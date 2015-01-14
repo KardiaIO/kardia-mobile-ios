@@ -16,9 +16,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AjX-hz-cg5">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AjX-hz-cg5">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="tNS-tC-8wa"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="9vI-Vc-ZCa" id="AgH-6t-Z2o"/>
                                     <outlet property="delegate" destination="9vI-Vc-ZCa" id="Zpt-9a-wKM"/>
@@ -37,9 +40,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hfh-JH-aqd" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="a7o-ql-ZIi">
+                <swipeGestureRecognizer direction="left" id="a7o-ql-ZIi">
                     <connections>
-                        <segue destination="vXZ-lx-hvc" kind="modal" id="l6n-sA-Qhk"/>
+                        <segue destination="vXZ-lx-hvc" kind="modal" modalTransitionStyle="flipHorizontal" id="l6n-sA-Qhk"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
@@ -82,7 +85,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="P4c-bz-x6F">
                     <connections>
-                        <segue destination="9vI-Vc-ZCa" kind="modal" id="1IU-3H-cVK"/>
+                        <segue destination="9vI-Vc-ZCa" kind="modal" modalTransitionStyle="flipHorizontal" id="1IU-3H-cVK"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
