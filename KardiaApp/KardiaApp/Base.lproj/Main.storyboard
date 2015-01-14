@@ -32,6 +32,7 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="a7o-ql-ZIi" appends="YES" id="VCf-Q3-Lyi"/>
+                            <outletCollection property="gestureRecognizers" destination="XGa-Ol-CJF" appends="YES" id="WE8-Xx-Zve"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="bkw-yc-MMe"/>
@@ -42,7 +43,12 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hfh-JH-aqd" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="left" id="a7o-ql-ZIi">
                     <connections>
-                        <segue destination="vXZ-lx-hvc" kind="modal" modalTransitionStyle="flipHorizontal" id="l6n-sA-Qhk"/>
+                        <segue destination="vXZ-lx-hvc" kind="modal" modalTransitionStyle="crossDissolve" id="l6n-sA-Qhk"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="XGa-Ol-CJF">
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="modal" modalTransitionStyle="crossDissolve" id="RJn-rv-7dq"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
@@ -76,6 +82,7 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="P4c-bz-x6F" appends="YES" id="Rcm-hS-vvZ"/>
+                            <outletCollection property="gestureRecognizers" destination="ZeL-fr-NbC" appends="YES" id="4ul-dl-Wcy"/>
                         </connections>
                     </view>
                     <connections>
@@ -85,7 +92,12 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="P4c-bz-x6F">
                     <connections>
-                        <segue destination="9vI-Vc-ZCa" kind="modal" modalTransitionStyle="flipHorizontal" id="1IU-3H-cVK"/>
+                        <segue destination="9vI-Vc-ZCa" kind="modal" modalTransitionStyle="crossDissolve" id="1IU-3H-cVK"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="ZeL-fr-NbC">
+                    <connections>
+                        <segue destination="9vI-Vc-ZCa" kind="modal" modalTransitionStyle="crossDissolve" id="qDc-h0-E3X"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
@@ -97,4 +109,8 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="qDc-h0-E3X"/>
+        <segue reference="l6n-sA-Qhk"/>
+    </inferredMetricsTieBreakers>
 </document>
