@@ -71,7 +71,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     // Register table cell behavior
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrhythmiaEvents.count
+        return arrhythmiaTimes.count
 
     }
     
@@ -90,7 +90,16 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+//        println(indexPath.row)
+//        arrhythmiaTimes.removeAtIndex(indexPath.row)
+//        self.arrhythmiaTable.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            arrhythmiaTimes.removeAtIndex(indexPath.row)
+            arrhythmiaTable.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+        }
     }
     
     

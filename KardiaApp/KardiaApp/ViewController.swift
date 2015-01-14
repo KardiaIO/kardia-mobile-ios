@@ -11,7 +11,7 @@ let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
 var firstLoad = true
 var lastCode = "0"
 var arrhythmiaEvents: [String] = []
-var arrhythmiaTimes: [NSDate] = [NSDate()]
+var arrhythmiaTimes: [NSDate] = [NSDate(), NSDate(), NSDate()]
 
 class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
     
