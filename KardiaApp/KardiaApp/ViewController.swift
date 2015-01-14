@@ -7,9 +7,15 @@
 //
 import UIKit
 
-let statusCodes: [String:String] = ["200":"NSR", "404":"ARR"]
+let statusCodes: [String:String] = ["0":"N/A", "200":"NSR", "404":"ARR"]
+var firstLoad = true
+var lastCode = "0"
+var arrhythmiaEvents: [String] = []
+var arrhythmiaTimes: [NSDate] = [NSDate(), NSDate(), NSDate()]
+var bluetoothConnected = false
 
-class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, LineChartDelegate {
+    
     // Instantiate views
     var statusView = UILabel()
     var lineChart: LineChart?
@@ -17,18 +23,19 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
     var BPMLabel = UILabel()
     var BPMView = UILabel()
     let textColor = UIColor.blueColor()
-    @IBOutlet var arrhythmiaTable: UITableView!
     var views: Dictionary<String, AnyObject> = [:]
 
     var socket: SocketIOClient!
-    
-    // Store arrhythmia events in the events array, which will be constantly re-mapped into human-readable strings in the times array.
-    var arrhythmiaEvents: [String] = []
-    var arrhythmiaTimes: [NSDate] = []
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set Bluetooth connection status image to correct image
+        if bluetoothConnected {
+            self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
+        } else {
+            self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-disconnected")
+        }
         
         // Set background gradient
         view.backgroundColor = UIColor.clearColor()
@@ -132,7 +139,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         // BPM view constraints and styling (view refers to the actual number, label is the "BPM" label
         BPMView.font = UIFont(name: "STHeitiTC-Light", size:30)
         BPMView.textColor = textColor
-        BPMView.text = "60"
+        BPMView.text = "- -"
         BPMView.setTranslatesAutoresizingMaskIntoConstraints(false)
         BPMView.textAlignment = NSTextAlignment.Center
         self.view.addSubview(BPMView)
@@ -187,7 +194,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         // Response code constraints and styling
         statusView.font = UIFont(name: "STHeitiTC-Light", size:26)
         statusView.textColor = textColor
-        statusView.text = "N/A"
+        statusView.text = statusCodes[lastCode]
         statusView.setTranslatesAutoresizingMaskIntoConstraints(false)
         statusView.textAlignment = NSTextAlignment.Center
         self.view.addSubview(statusView)
@@ -212,18 +219,6 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         )
         view.addConstraints([statusViewConstraintX, statusViewConstraintY])
         
-        
-        /*
-        * Arrhythmia events table
-        */
-        
-        // Register table cell behavior
-        self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        // Add timer to redraw arrhythmia events table
-        var redrawTableTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("redrawTable"), userInfo: nil, repeats: true)
-
-        
         /**
         * Sockets
         */
@@ -240,11 +235,13 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                 let code = statusCode as String
                 let description = statusCodes[String(code)]!
                 //Update status view on main thread to get view to update
+                if lastCode != "404" && code == "404" {
+                    let time = NSDate()
+                    arrhythmiaTimes.append(time)
+                    NSNotificationCenter.defaultCenter().postNotificationName("Abnormality", object: self, userInfo: nil)
+
+                }
                 dispatch_async(dispatch_get_main_queue()) {
-                    if self.statusView.text?.rangeOfString("Arrhythmia") == nil && code == "404" {
-                        let time = NSDate()
-                        self.arrhythmiaTimes.append(time)
-                    }
                     self.statusView.text = description
                     if code == "200" {
                         self.statusView.textColor = self.textColor
@@ -253,6 +250,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                         self.statusView.textColor = UIColor.redColor()
                     }
                 }
+                lastCode = code
             }
             
             // Display BPM
@@ -262,6 +260,7 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
                     self.BPMView.text = BPMnum
                 }
             }
+            
         }
         
         
@@ -270,59 +269,29 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
         * Listen for changes in bluetooth connection and new incoming data
         */
         
+
         // Listen for change in BT connection status
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("connectionChanged:"), name: BLEServiceChangedStatusNotification, object: nil)
         
         // Listen for incoming data from Bluetooth to render
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("processData:"), name: GotBLEDataNotification, object: nil)
-        
-        // Listen for incoming data (charValue) to pass to Node Server
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
 
-        
+
+        // Listen for incoming data (charValue) to pass to Node Server. Use the firstLoad boolean in order to avoid registering multiple event listeners.
+        if (firstLoad) {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("socketCall:"), name: charValueNotification, object: nil)
+                firstLoad = false
+        }
+    
         
         /**
         * Start the Bluetooth discovery process
         */
         btDiscoverySharedInstance
-    }
-    
-    // Method called by interval timer to constantly update human-readable time strings in arrhythmia events table
-    func redrawTable() {
-        self.arrhythmiaEvents = self.arrhythmiaTimes.map {
-            timeAgoSinceDate($0, false)
-        }
-        dispatch_async(dispatch_get_main_queue()) {
-            self.arrhythmiaTable.reloadData()
-        }
-    }
-    
-    /**
-    * Table View Protocol Methods
-    */
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.arrhythmiaEvents.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
-        cell.textLabel?.text = self.arrhythmiaEvents[indexPath.row]
-        cell.textLabel?.font = UIFont(name: "STHeitiTC-Light", size: 16)
-        dispatch_async(dispatch_get_main_queue()) {
-            cell.backgroundColor = UIColor.clearColor()
-        }
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
     }
     
-    override func shouldAutorotate() -> Bool {
-        return false
-    }
-    
+
     /**
     * Callback functions for Bluetooth events
     */
@@ -336,8 +305,13 @@ class ViewController: UIViewController, LineChartDelegate, UITableViewDelegate, 
             if let isConnected: Bool = userInfo["isConnected"] {
                 if isConnected {
                     self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
+                    bluetoothConnected = true
                 } else {
                     self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-disconnected")
+                    bluetoothConnected = false
+                    self.BPMView.text = "- -"
+                    lastCode = "0"
+                    self.statusView.text = statusCodes[lastCode]
                 }
             }
         });

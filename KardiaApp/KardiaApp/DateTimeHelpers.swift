@@ -18,6 +18,12 @@ public func ISOStringFromDate(date: NSDate) -> String {
     return dateFormatter.stringFromDate(date).stringByAppendingString("Z")
 }
 
+// Converts NSDate to human-readable string according to local format
+public func TimestampFromDate(date: NSDate) -> String {
+    let style = NSDateFormatterStyle.LongStyle
+    return NSDateFormatter.localizedStringFromDate(date, dateStyle: style, timeStyle: style)
+}
+
 // Displays time since input NSDate object in human-readable format. https://gist.github.com/minorbug/468790060810e0d29545
 public func timeAgoSinceDate(date:NSDate, numericDates:Bool) -> String {
     let calendar = NSCalendar.currentCalendar()
