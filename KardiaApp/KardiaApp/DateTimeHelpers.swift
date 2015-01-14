@@ -18,13 +18,8 @@ public func ISOStringFromDate(date: NSDate) -> String {
     return dateFormatter.stringFromDate(date).stringByAppendingString("Z")
 }
 
+// Converts NSDate to human-readable string according to local format
 public func TimestampFromDate(date: NSDate) -> String {
-//    var dateFormatter = NSDateFormatter()
-//    dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-//    dateFormatter.timeZone = NSTimeZone(abbreviation: "GMT")
-//    dateFormatter.dateFormat = "yyyy-MM-dd 'at' HH:mm"
-    
-//    return dateFormatter.stringFromDate(date)
     let style = NSDateFormatterStyle.LongStyle
     return NSDateFormatter.localizedStringFromDate(date, dateStyle: style, timeStyle: style)
 }

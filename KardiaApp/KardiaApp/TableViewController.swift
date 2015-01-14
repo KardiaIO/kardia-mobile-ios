@@ -10,71 +10,24 @@ import UIKit
 
 class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-//    var arrhythmiaEvents : [String]?
     @IBOutlet var arrhythmiaTable: UITableView!
-//    var arrhythmiaEvents: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        /*
-        var header = UILabel()
-        header.text = "Abnormal Events"
-        self.arrhythmiaTable.tableHeaderView = header
-        // View constraints for table
-        
-        let viewContainer = UIView(frame: view.frame)
-        view.addSubview(viewContainer)
-        self.arrhythmiaTable.setTranslatesAutoresizingMaskIntoConstraints(false);
-        var TableViewConstraintX = NSLayoutConstraint(
-            item: self.arrhythmiaTable,
-            attribute: NSLayoutAttribute.CenterX,
-            relatedBy: NSLayoutRelation.Equal,
-            toItem: viewContainer,
-            attribute: NSLayoutAttribute.CenterX,
-            multiplier: 1,
-            constant: 0
-        )
-        var TableViewConstraintY = NSLayoutConstraint(
-            item: self.arrhythmiaTable,
-            attribute: NSLayoutAttribute.CenterY,
-            relatedBy: NSLayoutRelation.Equal,
-            toItem: viewContainer,
-            attribute: NSLayoutAttribute.CenterY,
-            multiplier: 1,
-            constant: 0
-        )
-        var TableViewConstraintHeight = NSLayoutConstraint(
-            item: self.arrhythmiaTable,
-            attribute: NSLayoutAttribute.Height,
-            relatedBy: NSLayoutRelation.Equal,
-            toItem: viewContainer,
-            attribute: NSLayoutAttribute.Height,
-            multiplier: 0.9,
-            constant: 0
-        )
-        var TableViewConstraintWidth = NSLayoutConstraint(
-            item: self.arrhythmiaTable,
-            attribute: NSLayoutAttribute.Width,
-            relatedBy: NSLayoutRelation.Equal,
-            toItem: viewContainer,
-            attribute: NSLayoutAttribute.Width,
-            multiplier: 1,
-            constant: 0
-        )
-        view.addConstraints([TableViewConstraintX, TableViewConstraintY, TableViewConstraintHeight, TableViewConstraintWidth])
-        */
+
     }
     
-
+    /**
+    * Arrhythmia table protocol - datasource arrhythmiaTimes is defined in the ViewController
+    */
     
-    // Register table cell behavior
-    
+    // Number of rows
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrhythmiaTimes.count
-
     }
     
+    // Rendering of cells with timestamp and description
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.arrhythmiaTable?.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
         cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
@@ -89,12 +42,12 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return cell
     }
     
+    // Required delegate method for row selection; does nothing
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        println(indexPath.row)
-//        arrhythmiaTimes.removeAtIndex(indexPath.row)
-//        self.arrhythmiaTable.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+
     }
     
+    // Allows rows to be deleted
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             arrhythmiaTimes.removeAtIndex(indexPath.row)
