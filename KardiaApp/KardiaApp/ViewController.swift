@@ -11,7 +11,7 @@ let statusCodes: [String:String] = ["0":"N/A", "200":"NSR", "404":"ARR"]
 var firstLoad = true
 var lastCode = "0"
 var arrhythmiaEvents: [String] = []
-var arrhythmiaTimes: [NSDate] = [NSDate(), NSDate(), NSDate()]
+var arrhythmiaTimes: [NSDate] = []
 var bluetoothConnected = false
 
 class ViewController: UIViewController, LineChartDelegate {
@@ -27,6 +27,14 @@ class ViewController: UIViewController, LineChartDelegate {
 
     var socket: SocketIOClient!
 
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
+    
+    override func supportedInterfaceOrientations() -> Int {
+        return UIInterfaceOrientation.Portrait.rawValue
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -224,8 +232,8 @@ class ViewController: UIViewController, LineChartDelegate {
         */
         
         // Open socket connection
-        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
-//        socket = SocketIOClient(socketURL: "http://kardia.io")
+//        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
+        socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
         // Listen for response events from the server.
