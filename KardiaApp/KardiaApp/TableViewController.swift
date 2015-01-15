@@ -9,6 +9,12 @@
 import UIKit
 
 class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+ 
+    @IBOutlet var arrhythmiaTable: UITableView!
+    
+    /**
+    * Prevent autorotation
+    */
     
     override func shouldAutorotate() -> Bool {
         return false
@@ -17,13 +23,13 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func supportedInterfaceOrientations() -> Int {
         return UIInterfaceOrientation.Portrait.rawValue
     }
-
-    @IBOutlet var arrhythmiaTable: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Register table cell for reuse
         self.arrhythmiaTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-
+        
+        // Add event listener for new abnormalities in order to update view.
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("redrawTable"), name: "Abnormality", object: nil)
 
     }

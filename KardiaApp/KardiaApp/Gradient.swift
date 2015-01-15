@@ -9,7 +9,7 @@
 import UIKit
 
 /**
-* Used to create the background gradient
+* Used to create the background gradient in ViewController
 */
 class Gradient {
     let colorTop = UIColor(red: 60.0/255.0, green: 120.0/255.0, blue: 216.0/255.0, alpha: 1.0).CGColor
