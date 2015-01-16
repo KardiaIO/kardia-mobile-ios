@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /**
-* Helper functions for drawing hexagons.
+* Helper functions for drawing hexagons in ViewController.
 */
 
 func degree2radian(a:CGFloat)->CGFloat {

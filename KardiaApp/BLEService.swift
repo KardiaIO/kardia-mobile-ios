@@ -9,18 +9,18 @@
 import Foundation
 import CoreBluetooth
 
-/* Services & Characteristics UUIDs */
+// Services & Characteristics UUIDs
 let BLEServiceUUID = CBUUID(string: "713D0000-503E-4C75-BA94-3148F18D941E")
 let EKGCharUUID = CBUUID(string: "713D0002-503E-4C75-BA94-3148F18D941E")
-let RXUUID = CBUUID(string: "713D0003-503E-4C75-BA94-3148F18D941E")
+
+// Event names
 let BLEServiceChangedStatusNotification = "kBLEServiceChangedStatusNotification"
 let GotBLEDataNotification = "GotBLEData"
 let charValueNotification = "CharacterValue"
 
 class BTService: NSObject, CBPeripheralDelegate {
     var peripheral: CBPeripheral?
-    var positionCharacteristic: CBCharacteristic?
-    var RXCharacteristic: CBCharacteristic?
+    var ECGData: CBCharacteristic?
     var dataPoints: [String] = []
     
     init(initWithPeripheral peripheral: CBPeripheral) {
@@ -50,7 +50,7 @@ class BTService: NSObject, CBPeripheralDelegate {
     // Mark: - CBPeripheralDelegate
     
     func peripheral(peripheral: CBPeripheral!, didDiscoverServices error: NSError!) {
-        let uuidsForBTService: [CBUUID] = [EKGCharUUID, RXUUID]
+        let uuidsForBTService: [CBUUID] = [EKGCharUUID]
         
         if (peripheral != self.peripheral) {
             // Wrong Peripheral
@@ -86,14 +86,10 @@ class BTService: NSObject, CBPeripheralDelegate {
         for characteristic in service.characteristics {
             //        println(characteristic)
             if characteristic.UUID == EKGCharUUID {
-                self.positionCharacteristic = (characteristic as CBCharacteristic)
+                self.ECGData = (characteristic as CBCharacteristic)
                 peripheral.setNotifyValue(true, forCharacteristic: characteristic as CBCharacteristic)
                 // Send notification that Bluetooth is connected and all required characteristics are discovered
                 self.sendBTServiceNotificationWithIsBluetoothConnected(true)
-            }
-            if characteristic.UUID == RXUUID {
-                self.RXCharacteristic = (characteristic as CBCharacteristic)
-                
             }
             
         }
@@ -101,11 +97,11 @@ class BTService: NSObject, CBPeripheralDelegate {
     
     // This function executes when the BLE device updates the value it is transmitting.
     func peripheral(peripheral: CBPeripheral!, didUpdateValueForCharacteristic characteristic: CBCharacteristic!, error: NSError!) {
-        if self.positionCharacteristic == nil {
+        if self.ECGData == nil {
             return
         }
         // Get the raw data from the device and type cast it to string.
-        var charRawValue: NSData = self.positionCharacteristic!.value
+        var charRawValue: NSData = self.ECGData!.value
         var charValue: String = NSString(data: charRawValue, encoding: NSUTF8StringEncoding)!
         
         // Store the latest datapoints in an array to be passed on for visualization
@@ -120,7 +116,7 @@ class BTService: NSObject, CBPeripheralDelegate {
         NSNotificationCenter.defaultCenter().postNotificationName(charValueNotification, object: self, userInfo: charData)
     }
     
-    
+    // When Bluetooth device connection status changes, fire an event
     func sendBTServiceNotificationWithIsBluetoothConnected(isBluetoothConnected: Bool) {
         let connectionDetails = ["isConnected": isBluetoothConnected]
         NSNotificationCenter.defaultCenter().postNotificationName(BLEServiceChangedStatusNotification, object: self, userInfo: connectionDetails)

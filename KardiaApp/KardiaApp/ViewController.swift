@@ -7,10 +7,16 @@
 //
 import UIKit
 
-let statusCodes: [String:String] = ["0":"N/A", "200":"NSR", "404":"ARR"]
+// Add new status codes here as new Python analyses are implemented
+let statusCodes: [String:String] = [
+    "0":"N/A", // Displayed when disconnected
+    "200":"NSR",
+    "404":"ARR"
+]
+// Prevents multiple event listeners from being registered; used later in ViewDidLoad
 var firstLoad = true
+
 var lastCode = "0"
-var arrhythmiaEvents: [String] = []
 var arrhythmiaTimes: [NSDate] = []
 var bluetoothConnected = false
 
@@ -27,6 +33,10 @@ class ViewController: UIViewController, LineChartDelegate {
 
     var socket: SocketIOClient!
 
+    /**
+    * Prevent autorotation
+    */
+    
     override func shouldAutorotate() -> Bool {
         return false
     }
@@ -37,6 +47,12 @@ class ViewController: UIViewController, LineChartDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        /**********************
+        *   View Rendering    *
+        **********************/
+        
         
         // Set Bluetooth connection status image to correct image
         if bluetoothConnected {
@@ -227,12 +243,16 @@ class ViewController: UIViewController, LineChartDelegate {
         )
         view.addConstraints([statusViewConstraintX, statusViewConstraintY])
         
+        
+        /*****************************
+        *   Sockets and Bluetooth    *
+        *****************************/
+        
         /**
         * Sockets
         */
         
         // Open socket connection
-//        socket = SocketIOClient(socketURL: "http://10.6.29.229:8080")
         socket = SocketIOClient(socketURL: "http://kardia.io")
         socket.connect()
         
@@ -304,12 +324,12 @@ class ViewController: UIViewController, LineChartDelegate {
     * Callback functions for Bluetooth events
     */
     
+    // Callback function invoked when Bluetooth device connects or disconnects
     func connectionChanged(notification: NSNotification) {
-        // Connection status changed. Indicate on GUI.
         let userInfo = notification.userInfo as [String: Bool]
-        
+
+        // Connection status changed. Reflect on interface by changing image.
         dispatch_async(dispatch_get_main_queue(), {
-            // Set image based on connection status
             if let isConnected: Bool = userInfo["isConnected"] {
                 if isConnected {
                     self.imgBluetoothStatus.image = UIImage(named: "Bluetooth-connected")
@@ -320,6 +340,7 @@ class ViewController: UIViewController, LineChartDelegate {
                     self.BPMView.text = "- -"
                     lastCode = "0"
                     self.statusView.text = statusCodes[lastCode]
+                    self.socket.emit("/BLEDisconnect")
                 }
             }
         });
@@ -366,6 +387,7 @@ class ViewController: UIViewController, LineChartDelegate {
             chart.addLine(data)
         // otherwise initialize and constrain the chart and add a line.
         } else {
+            // initialize with various parameters
             lineChart = LineChart()
             lineChart!.animationEnabled = false
             lineChart!.gridVisible = false
@@ -374,8 +396,9 @@ class ViewController: UIViewController, LineChartDelegate {
             lineChart!.lineWidth = 3
             lineChart!.axisInset = -30
             lineChart!.addLine(data)
-            lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
             lineChart!.delegate = self
+            // set constraints
+            lineChart!.setTranslatesAutoresizingMaskIntoConstraints(false)
             self.view.addSubview(lineChart!)
             views["chart"] = lineChart
             view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[chart]-|", options: nil, metrics: nil, views: views))
@@ -393,13 +416,13 @@ class ViewController: UIViewController, LineChartDelegate {
         }
     }
     
-    // Linechart delegate method
+    // Linechart delegate method (unused)
     func didSelectDataPoint(x: CGFloat, yValues: Array<CGFloat>) {
 
     }
     
     
-    // Redraw chart on device rotation
+    // Redraw chart on device rotation - currently unused due to restriction on autorotate
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         if let chart = lineChart {
             chart.setNeedsDisplay()
