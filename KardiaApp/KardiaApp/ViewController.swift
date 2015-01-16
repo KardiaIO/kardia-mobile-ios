@@ -257,7 +257,7 @@ class ViewController: UIViewController, LineChartDelegate {
         socket.connect()
         
         // Listen for response events from the server.
-        socket.on("/node.js") {data in
+        socket.on("node.js") {data in
             // Interpret status code and display appropriate description
             if let statusCode: NSObject = data!["statusCode"]! as? NSObject {
                 let code = statusCode as String
