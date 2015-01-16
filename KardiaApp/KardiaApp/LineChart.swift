@@ -420,6 +420,7 @@ class LineChart: UIControl {
         layer.frame = self.bounds
         layer.path = path
 //        layer.strokeColor = colors[lineIndex].CGColor
+        // Kardia.io modification
         layer.strokeColor = UIColor.whiteColor().CGColor
         layer.fillColor = nil
         layer.lineWidth = lineWidth
